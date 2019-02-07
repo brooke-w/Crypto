@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerCommandArguments>"'bdi8wemaucjewuixcbalfisedbfkljaseg,bdcjaasmn sjhcbuwe cmsd,ajssjfb c vjdsgkqnmew s hes,djfbamebe8r35bao9wdb w8e3rdhas,cn r3iqmncbfjakesehf a werhoqawhe mahfher 4tszjugt8s3eb,q,2l1,koppxdn a,a;];bkvjseghofiy3 ,hjoaieshf,saehkflaieflh ihse82o56jsdbfog8ehsa'" -0123456789abcdef -</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerCommandArguments>"'bdi8wemaucjewuixcbalfisedbfkljaseg,bdcjaasmn sjhcbuwe cmsd,ajssjfb c vjdsgkqnmew s hes,djfbamebe8r35bao9wdb w8e3rdhas,cn r3iqmncbfjakesehf a werhoqawhe mahfher 4tszjugt8s3eb,q,2l1,koppxdn a,a;];bkvjseghofiy3 ,hjoaieshf,saehkflaieflh ihse82o56jsdbfog8ehsa'" -0123456789abcdef -</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+</Project>
