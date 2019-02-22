@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GF Multiply", "GF Multiply\GF Multiply.vcxproj", "{591FCEDA-7B52-484F-8E8C-494D2B6CF7CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{591FCEDA-7B52-484F-8E8C-494D2B6CF7CF}.Debug|x64.ActiveCfg = Debug|x64
+		{591FCEDA-7B52-484F-8E8C-494D2B6CF7CF}.Debug|x64.Build.0 = Debug|x64
+		{591FCEDA-7B52-484F-8E8C-494D2B6CF7CF}.Debug|x86.ActiveCfg = Debug|Win32
+		{591FCEDA-7B52-484F-8E8C-494D2B6CF7CF}.Debug|x86.Build.0 = Debug|Win32
+		{591FCEDA-7B52-484F-8E8C-494D2B6CF7CF}.Release|x64.ActiveCfg = Release|x64
+		{591FCEDA-7B52-484F-8E8C-494D2B6CF7CF}.Release|x64.Build.0 = Release|x64
+		{591FCEDA-7B52-484F-8E8C-494D2B6CF7CF}.Release|x86.ActiveCfg = Release|Win32
+		{591FCEDA-7B52-484F-8E8C-494D2B6CF7CF}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D3F31ABD-3A39-40DD-9277-57573C064F6C}
+	EndGlobalSection
+EndGlobal
