@@ -31,18 +31,17 @@ using namespace std;
 unsigned int bit = 1;
 unsigned int zeroBitFreq = 0;
 unsigned int oneBitFreq = 0;
-unsigned int zeroBlockFreq = 0;
-unsigned int oneBlockFreq = 0;
+unsigned int blockCompositionFreq[65] = { 0 }; //0 index represents all zeros, 1 index represents 63 zeros and one 1, and 64 represents all 1s
 unsigned int charFreq[256] = { 0 };
 unsigned int digraphFreq[65536] = { 0 };
-unsigned int trigraphFreq[16777216] = { 0 };
 unsigned int octetFreq[640000] = { 0 };
 unsigned long long octet[640000] = { 0 };
+unsigned int trigraphFreq[16777216] = { 0 };
 
 int main()
 {
-	string filename = "C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\Shakespeare.txt";
-	//"C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\Shakespeare.des"
+	string filename = //"C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\Shakespeare.txt";
+		"C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\Shakespeare.des";
     //Open an ifstream
 	ifstream inputText(filename, ifstream::binary);
 	if (!inputText.is_open())
@@ -106,7 +105,7 @@ int main()
 		digraphFreq[comboChars]++;
 
 		//increment trigraph frequency by two (based on previous TWO letters + current)
-		comboChars = (((threeCharsAgo << 8) | previous) << 8) | current;
+		comboChars = ((threeCharsAgo << 16) | (previous << 8)) | current;
 		trigraphFreq[comboChars]++;
 
 		//save two previous characters
@@ -117,16 +116,18 @@ int main()
 	} while (inputText.get(temp));
 
 	inputText.close();
-
+	
 	ifstream inputText1(filename, ifstream::binary);
 	if (!inputText1.is_open())
 	{
 		cerr << "Error: File cannot be read.";
 		exit(1);
 	}
+	
 	//Process input text as 64 bit blocks to analyze octet and deduce if any blocks were all 0 or all 1.
 	unsigned char buffer[8];
 	unsigned long long block = 0;
+	int blockCompCount = 0;
 	while (inputText1.read(reinterpret_cast<char*>(&buffer), 8)) {
 		//Process 64 bits of input into usable form
 		block = (unsigned long long)(buffer[0]) << (64 - 8);
@@ -138,9 +139,11 @@ int main()
 		block |= (unsigned long long)(buffer[6]) << (64 - 56);
 		block |= (unsigned long long)(buffer[7]);
 
-		//store frequency info if block is all 0s or all 1s
-		if (block == 0) zeroBlockFreq++;
-		if (block == 0xFFFFFFFFFFFFFFFF)  oneBlockFreq++;
+		//store block composition information
+		for(int i = 0; i < 64; i++)
+			blockCompCount += (block >> i) & 0x01;
+		blockCompositionFreq[blockCompCount]++;
+		blockCompCount = 0;
 
 		//store frequency info for octet block
 		for (int i = 0; i < 640000; i++) {
@@ -157,12 +160,12 @@ int main()
 
 		try
 		{
-			ofstream output1("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\plaintext_output_single_bit.csv", ofstream::binary);
+			ofstream output1("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_single_bit.csv", ofstream::binary);
 			output1.exceptions(ofstream::failbit | ofstream::badbit);
 			output1 << "Bit,Frequency\n" << 0 << ',' << zeroBitFreq << endl << 1 << ',' << oneBitFreq << endl;
 			output1.close();
 
-			ofstream outputText("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\plaintext_output_single.csv", ofstream::binary);
+			ofstream outputText("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_single.csv", ofstream::binary);
 			outputText.exceptions(ofstream::failbit | ofstream::badbit);
 			outputText << "Character,Frequency\n";
 
@@ -175,7 +178,7 @@ int main()
 			}
 			outputText.close();
 
-			ofstream output2("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\plaintext_output_digraph.csv", ofstream::binary);
+			ofstream output2("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_digraph.csv", ofstream::binary);
 			output2.exceptions(ofstream::failbit | ofstream::badbit);
 			output2 << "Digraph,Frequency\n";
 
@@ -195,15 +198,17 @@ int main()
 			}
 			output2.close();
 
-			ofstream output3("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\plaintext_output_trigraph.csv", ofstream::binary);
+			ofstream output3("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_trigraph.csv", ofstream::binary);
 			output3.exceptions(ofstream::failbit | ofstream::badbit);
 			output3 << "Trigraph,Frequency\n";
-
-			for (int i = 0; i < 500000; i++) {
-				comboChars = i;
+			int count = 0;
+			unsigned int k = 0;
+			for (k; k < 16777216; k++) {
+				comboChars = k;
 				current = comboChars >> 16;
-				if (trigraphFreq[i] == 0)
+				if (trigraphFreq[k] == 0)
 					continue;
+				count++;
 				output3 << to_string((unsigned int)current) + " ";
 
 				current = (comboChars >> 8) & 0x0000FF;
@@ -213,42 +218,48 @@ int main()
 				output3 << to_string((unsigned int)current);
 
 				output3.put(',');
-				output3 << to_string(trigraphFreq[i]);
+				output3 << to_string(trigraphFreq[k]);
 				output3.put('\n');
+				if (count >= 500000)
+					break;
 			}
+			count = 0;
 			for (int i = 40000; i > 0; i--) {
 				output3.put('\n');
 			}
-			for (int i = 16777215; i > 16777215 - 500000; i--) {
-				comboChars = i;
-				current = comboChars >> 16;
-				if (trigraphFreq[i] == 0)
-					continue;
-				output3 << to_string((unsigned int)current) + " ";
+			if (!(k >= 16777215))
+				for (unsigned int i = 16777215; i > 0; i--) {
+					comboChars = i;
+					current = comboChars >> 16;
+					if (trigraphFreq[i] == 0)
+						continue;
+					count++;
+					output3 << to_string((unsigned int)current) + " ";
 
-				current = (comboChars >> 8) & 0x0000FF;
-				output3 << to_string((unsigned int)current) + " ";
+					current = (comboChars >> 8) & 0x0000FF;
+					output3 << to_string((unsigned int)current) + " ";
 
-				current = comboChars & 0x00000FF;
-				output3 << to_string((unsigned int)current);
+					current = comboChars & 0x00000FF;
+					output3 << to_string((unsigned int)current);
 
-				output3.put(',');
-				output3 << to_string(trigraphFreq[i]);
-				output3.put('\n');
-			}
+					output3.put(',');
+					output3 << to_string(trigraphFreq[i]);
+					output3.put('\n');
+					if (count >= 500000)
+						break;
+				}
 			output3.close();
 
-			ofstream output4("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\plaintext_output_bit_block.csv", ofstream::binary);
+			ofstream output4("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_bit_block.csv", ofstream::binary);
 			output4.exceptions(ofstream::failbit | ofstream::badbit);
 			output4 << "Block,Frequency\n";
 
-			output4 << "Block,Frequency\n" << 0x0000000000000000 << ',' << zeroBlockFreq << endl << 0xFFFFFFFFFFFFFFFF << ',' << oneBlockFreq << endl;
+			for (int i = 0; i < 65; i++) {
+				output4 << 64-i << " zeros " << i << " ones, " << blockCompositionFreq[i] << endl;
+			}
 			output4.close();
 
-			output1 << "Bit,Frequency\n" << 0 << ',' << zeroBitFreq << endl << 1 << ',' << oneBitFreq << endl;
-			output1.close();
-
-			ofstream output5("output_octet.csv", ofstream::binary);
+			ofstream output5("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_octet.csv", ofstream::binary);
 			output5.exceptions(ofstream::failbit | ofstream::badbit);
 			output5 << "Octet,Frequency\n";
 

@@ -1569,6 +1569,8 @@ unsigned long long desDecrypt(unsigned long long message)
 	return message;
 }
 
+/*This is where command line arguments are processed and where the I/O is processed 
+then sent to the DES encryption/decryption thingy*/
 int main(int argc, char * argv[])
 {
 	clock_t start = clock();	//start a timer
