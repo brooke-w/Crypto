@@ -41,7 +41,8 @@ unsigned int trigraphFreq[16777216] = { 0 };
 int main()
 {
 	string filename = //"C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\Shakespeare.txt";
-		"C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\Shakespeare.des";
+		//"C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\Shakespeare.des";
+		"C:\\Users\\Brooke Weborg\\Desktop\\cbc_encrypt.txt";
     //Open an ifstream
 	ifstream inputText(filename, ifstream::binary);
 	if (!inputText.is_open())
@@ -160,12 +161,12 @@ int main()
 
 		try
 		{
-			ofstream output1("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_single_bit.csv", ofstream::binary);
+			ofstream output1("C:\\Users\\Brooke Weborg\\Documents\\Shakespeare Analysis Files\\cbc_encrypted_output_single_bit.csv", ofstream::binary);
 			output1.exceptions(ofstream::failbit | ofstream::badbit);
 			output1 << "Bit,Frequency\n" << 0 << ',' << zeroBitFreq << endl << 1 << ',' << oneBitFreq << endl;
 			output1.close();
 
-			ofstream outputText("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_single.csv", ofstream::binary);
+			ofstream outputText("C:\\Users\\Brooke Weborg\\Documents\\Shakespeare Analysis Files\\cbc_encrypted_output_single.csv", ofstream::binary);
 			outputText.exceptions(ofstream::failbit | ofstream::badbit);
 			outputText << "Character,Frequency\n";
 
@@ -178,7 +179,7 @@ int main()
 			}
 			outputText.close();
 
-			ofstream output2("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_digraph.csv", ofstream::binary);
+			ofstream output2("C:\\Users\\Brooke Weborg\\Documents\\Shakespeare Analysis Files\\cbc_encrypted_output_digraph.csv", ofstream::binary);
 			output2.exceptions(ofstream::failbit | ofstream::badbit);
 			output2 << "Digraph,Frequency\n";
 
@@ -198,7 +199,7 @@ int main()
 			}
 			output2.close();
 
-			ofstream output3("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_trigraph.csv", ofstream::binary);
+			ofstream output3("C:\\Users\\Brooke Weborg\\Documents\\Shakespeare Analysis Files\\cbc_encrypted_output_trigraph.csv", ofstream::binary);
 			output3.exceptions(ofstream::failbit | ofstream::badbit);
 			output3 << "Trigraph,Frequency\n";
 			int count = 0;
@@ -250,7 +251,7 @@ int main()
 				}
 			output3.close();
 
-			ofstream output4("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_bit_block.csv", ofstream::binary);
+			ofstream output4("C:\\Users\\Brooke Weborg\\Documents\\Shakespeare Analysis Files\\cbc_encrypted_output_bit_block.csv", ofstream::binary);
 			output4.exceptions(ofstream::failbit | ofstream::badbit);
 			output4 << "Block,Frequency\n";
 
@@ -259,7 +260,7 @@ int main()
 			}
 			output4.close();
 
-			ofstream output5("C:\\Users\\Brooke Weborg\\Downloads\\Shakespeare DES\\encrypted_output_octet.csv", ofstream::binary);
+			ofstream output5("C:\\Users\\Brooke Weborg\\Documents\\Shakespeare Analysis Files\\cbc_encrypted_output_octet.csv", ofstream::binary);
 			output5.exceptions(ofstream::failbit | ofstream::badbit);
 			output5 << "Octet,Frequency\n";
 

@@ -1,9 +1,12 @@
 ﻿  pch.cpp
   DES.cpp
-c:\users\brooke weborg\documents\des\des\des.cpp(78): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\brooke weborg\documents\des\des\des.cpp(87): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
-c:\users\brooke weborg\documents\des\des\des.cpp(1686): warning C4244: 'initializing': conversion from 'std::streamsize' to 'int', possible loss of data
+c:\users\brooke weborg\documents\github\crypto\des\des\des.cpp(82): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\brooke weborg\documents\github\crypto\des\des\des.cpp(91): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
+c:\users\brooke weborg\documents\github\crypto\des\des\des.cpp(1694): warning C4244: 'initializing': conversion from 'std::streamsize' to 'int', possible loss of data
+c:\users\brooke weborg\documents\github\crypto\des\des\des.cpp(1796): warning C4244: 'initializing': conversion from 'std::streamsize' to 'int', possible loss of data
   Generating code
-  All 183 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  177 of 183 functions (96.7%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  DES.vcxproj -> C:\Users\Brooke Weborg\Documents\DES\x64\Release\DES.exe
+  DES.vcxproj -> C:\Users\Brooke Weborg\Documents\GitHub\crypto\DES\x64\Release\DES.exe

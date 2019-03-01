@@ -1,5 +1,7 @@
-﻿  DES.cpp
-c:\users\brooke weborg\documents\des\des\des.cpp(78): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\brooke weborg\documents\des\des\des.cpp(87): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
-c:\users\brooke weborg\documents\des\des\des.cpp(1686): warning C4244: 'initializing': conversion from 'std::streamsize' to 'int', possible loss of data
-  DES.vcxproj -> C:\Users\Brooke Weborg\Documents\DES\x64\Debug\DES.exe
+﻿  pch.cpp
+  DES.cpp
+c:\users\brooke weborg\documents\github\crypto\des\des\des.cpp(82): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\brooke weborg\documents\github\crypto\des\des\des.cpp(91): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
+c:\users\brooke weborg\documents\github\crypto\des\des\des.cpp(1694): warning C4244: 'initializing': conversion from 'std::streamsize' to 'int', possible loss of data
+c:\users\brooke weborg\documents\github\crypto\des\des\des.cpp(1796): warning C4244: 'initializing': conversion from 'std::streamsize' to 'int', possible loss of data
+  DES.vcxproj -> C:\Users\Brooke Weborg\Documents\GitHub\crypto\DES\x64\Debug\DES.exe

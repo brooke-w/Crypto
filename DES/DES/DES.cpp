@@ -3,6 +3,10 @@ EECS 5980
 Programming Assignment #1
 2-1-2019
 
+Programming Assignment #2
+3-2-2019
+>Add CBC mode to assignment #1
+
 This program will take console input in the form
 DES <–action> <key> <mode> <infile> <outfile>
 
@@ -1604,13 +1608,12 @@ int main(int argc, char * argv[])
 	//get the mode
 	string temp = argv[3];
 	string mode = "";
-	bool isECB = true;
 	for (short i = 0; i < temp.length(); i++)	//make everything lowercase
 		mode += tolower(temp[i]);
 
-	if (mode != "ecb")
+	if (!(mode == "ecb" || mode == "cbc"))
 	{
-		cerr << "Error: Bad Input. ECB mode is only accepted. <action> <key> <mode> <infile> <outfile>\n";
+		cerr << "Error: Bad Input. ECB and CBC are only accepted. <action> <key> <mode> <infile> <outfile>\n";
 		exit(1);
 	}
 
@@ -1635,7 +1638,7 @@ int main(int argc, char * argv[])
 		outputText.exceptions(ofstream::failbit | ofstream::badbit);
 
 		//Need to do stuff with file length dependent on whether we are encrypting or decrypting
-		if(isEncrypt)
+		if (isEncrypt)
 		{
 			//get length of file, pad on left, encrypt, and write to file
 			inputText.seekg(0, inputText.end);
@@ -1643,89 +1646,195 @@ int main(int argc, char * argv[])
 			inputText.seekg(0, inputText.beg);
 
 			srand(start);
-			temp1 = ((unsigned long long)rand() % 256 << 32 | (unsigned long long)rand() % 256 << 24 | (unsigned long long)rand() % 256 << 16 
-					| (unsigned long long)rand() % 256 << 8 | (unsigned long long)rand() % 256) << 32;
+			temp1 = ((unsigned long long)rand() % 256 << 32 | (unsigned long long)rand() % 256 << 24 | (unsigned long long)rand() % 256 << 16
+				| (unsigned long long)rand() % 256 << 8 | (unsigned long long)rand() % 256) << 32;
 			unsigned long long fileLengthNGarbage = (temp1 | fileLength);
-			fileLengthNGarbage = desEncrypt(fileLengthNGarbage);
 
-			//Prep new message for output
-			buffer[0] = (fileLengthNGarbage >> (64 - 8)) & 0x00000000000000FF;
-			buffer[1] = (fileLengthNGarbage >> (64 - 16)) & 0x00000000000000FF;
-			buffer[2] = (fileLengthNGarbage >> (64 - 24)) & 0x00000000000000FF;
-			buffer[3] = (fileLengthNGarbage >> (64 - 32)) & 0x00000000000000FF;
-			buffer[4] = (fileLengthNGarbage >> (64 - 40)) & 0x00000000000000FF;
-			buffer[5] = (fileLengthNGarbage >> (64 - 48)) & 0x00000000000000FF;
-			buffer[6] = (fileLengthNGarbage >> (64 - 56)) & 0x00000000000000FF;
-			buffer[7] = (fileLengthNGarbage >> (64 - 64)) & 0x00000000000000FF;
-			outputText.write(reinterpret_cast<char*>(&buffer), 8);
-
-			//Do DES Stuff here
-			while (inputText.read(reinterpret_cast<char*>(&buffer), 8)) {
-				//Process 64 bits of input into usable form for DES
-				temp1 = (unsigned long long)(buffer[0]) << (64 - 8);
-				temp1 |= (unsigned long long)(buffer[1]) << (64 - 16);
-				temp1 |= (unsigned long long)(buffer[2]) << (64 - 24);
-				temp1 |= (unsigned long long)(buffer[3]) << (64 - 32);
-				temp1 |= (unsigned long long)(buffer[4]) << (64 - 40);
-				temp1 |= (unsigned long long)(buffer[5]) << (64 - 48);
-				temp1 |= (unsigned long long)(buffer[6]) << (64 - 56);
-				temp1 |= (unsigned long long)(buffer[7]);
-				temp1 = desEncrypt(temp1);							//encrypt/decrypt with DES
-
-				//Prep new message for output
-				buffer[0] = (temp1 >> (64 - 8)) & 0x00000000000000FF;
-				buffer[1] = (temp1 >> (64 - 16)) & 0x00000000000000FF;
-				buffer[2] = (temp1 >> (64 - 24)) & 0x00000000000000FF;
-				buffer[3] = (temp1 >> (64 - 32)) & 0x00000000000000FF;
-				buffer[4] = (temp1 >> (64 - 40)) & 0x00000000000000FF;
-				buffer[5] = (temp1 >> (64 - 48)) & 0x00000000000000FF;
-				buffer[6] = (temp1 >> (64 - 56)) & 0x00000000000000FF;
-				buffer[7] = (temp1 >> (64 - 64)) & 0x00000000000000FF;
-				outputText.write(reinterpret_cast<char*>(&buffer), 8);
-			}
-			//check last read to see how many bytes came
-			//pad and encrypt
-			int bytesLeft = inputText.gcount();
-			if (bytesLeft > 0)
+			if (mode == "ecb")
 			{
-				temp1 = 0;
-				//Process 64 bits using DES
-				switch (bytesLeft) {
-				case 7: temp1 |= (unsigned long long)(buffer[6]) << (64 - 56);
-				case 6: temp1 |= (unsigned long long)(buffer[5]) << (64 - 48);
-				case 5: temp1 |= (unsigned long long)(buffer[4]) << (64 - 40);
-				case 4: temp1 |= (unsigned long long)(buffer[3]) << (64 - 32);
-				case 3: temp1 |= (unsigned long long)(buffer[2]) << (64 - 24);
-				case 2: temp1 |= (unsigned long long)(buffer[1]) << (64 - 16);
-				case 1: temp1 |= (unsigned long long)(buffer[0]) << (64 - 8);
-				}
-
-				switch (bytesLeft) {
-				case 1: temp1 |= (unsigned long long)(rand() % 256) << (64 - 16);
-				case 2: temp1 |= (unsigned long long)(rand() % 256) << (64 - 24);
-				case 3: temp1 |= (unsigned long long)(rand() % 256) << (64 - 32);
-				case 4: temp1 |= (unsigned long long)(rand() % 256) << (64 - 40);
-				case 5: temp1 |= (unsigned long long)(rand() % 256) << (64 - 48);
-				case 6: temp1 |= (unsigned long long)(rand() % 256) << (64 - 56);
-				default: temp1 |= (unsigned long long)(rand() % 256) << (64 - 64);
-				}
-
-				temp1 = desEncrypt(temp1);
+				fileLengthNGarbage = desEncrypt(fileLengthNGarbage);
 
 				//Prep new message for output
-				buffer[0] = (temp1 >> (64 - 8)) & 0x00000000000000FF;
-				buffer[1] = (temp1 >> (64 - 16)) & 0x00000000000000FF;
-				buffer[2] = (temp1 >> (64 - 24)) & 0x00000000000000FF;
-				buffer[3] = (temp1 >> (64 - 32)) & 0x00000000000000FF;
-				buffer[4] = (temp1 >> (64 - 40)) & 0x00000000000000FF;
-				buffer[5] = (temp1 >> (64 - 48)) & 0x00000000000000FF;
-				buffer[6] = (temp1 >> (64 - 56)) & 0x00000000000000FF;
-				buffer[7] = (temp1 >> (64 - 64)) & 0x00000000000000FF;
+				buffer[0] = (fileLengthNGarbage >> (64 - 8)) & 0x00000000000000FF;
+				buffer[1] = (fileLengthNGarbage >> (64 - 16)) & 0x00000000000000FF;
+				buffer[2] = (fileLengthNGarbage >> (64 - 24)) & 0x00000000000000FF;
+				buffer[3] = (fileLengthNGarbage >> (64 - 32)) & 0x00000000000000FF;
+				buffer[4] = (fileLengthNGarbage >> (64 - 40)) & 0x00000000000000FF;
+				buffer[5] = (fileLengthNGarbage >> (64 - 48)) & 0x00000000000000FF;
+				buffer[6] = (fileLengthNGarbage >> (64 - 56)) & 0x00000000000000FF;
+				buffer[7] = (fileLengthNGarbage >> (64 - 64)) & 0x00000000000000FF;
 				outputText.write(reinterpret_cast<char*>(&buffer), 8);
+
+				//Do DES Stuff here
+				while (inputText.read(reinterpret_cast<char*>(&buffer), 8)) {
+					//Process 64 bits of input into usable form for DES
+					temp1 = (unsigned long long)(buffer[0]) << (64 - 8);
+					temp1 |= (unsigned long long)(buffer[1]) << (64 - 16);
+					temp1 |= (unsigned long long)(buffer[2]) << (64 - 24);
+					temp1 |= (unsigned long long)(buffer[3]) << (64 - 32);
+					temp1 |= (unsigned long long)(buffer[4]) << (64 - 40);
+					temp1 |= (unsigned long long)(buffer[5]) << (64 - 48);
+					temp1 |= (unsigned long long)(buffer[6]) << (64 - 56);
+					temp1 |= (unsigned long long)(buffer[7]);
+					temp1 = desEncrypt(temp1);							//encrypt/decrypt with DES
+
+					//Prep new message for output
+					buffer[0] = (temp1 >> (64 - 8)) & 0x00000000000000FF;
+					buffer[1] = (temp1 >> (64 - 16)) & 0x00000000000000FF;
+					buffer[2] = (temp1 >> (64 - 24)) & 0x00000000000000FF;
+					buffer[3] = (temp1 >> (64 - 32)) & 0x00000000000000FF;
+					buffer[4] = (temp1 >> (64 - 40)) & 0x00000000000000FF;
+					buffer[5] = (temp1 >> (64 - 48)) & 0x00000000000000FF;
+					buffer[6] = (temp1 >> (64 - 56)) & 0x00000000000000FF;
+					buffer[7] = (temp1 >> (64 - 64)) & 0x00000000000000FF;
+					outputText.write(reinterpret_cast<char*>(&buffer), 8);
+				}
+				//check last read to see how many bytes came
+				//pad and encrypt
+				int bytesLeft = inputText.gcount();
+				if (bytesLeft > 0)
+				{
+					temp1 = 0;
+					//Process 64 bits using DES
+					switch (bytesLeft) {
+					case 7: temp1 |= (unsigned long long)(buffer[6]) << (64 - 56);
+					case 6: temp1 |= (unsigned long long)(buffer[5]) << (64 - 48);
+					case 5: temp1 |= (unsigned long long)(buffer[4]) << (64 - 40);
+					case 4: temp1 |= (unsigned long long)(buffer[3]) << (64 - 32);
+					case 3: temp1 |= (unsigned long long)(buffer[2]) << (64 - 24);
+					case 2: temp1 |= (unsigned long long)(buffer[1]) << (64 - 16);
+					case 1: temp1 |= (unsigned long long)(buffer[0]) << (64 - 8);
+					}
+
+					switch (bytesLeft) {
+					case 1: temp1 |= (unsigned long long)(rand() % 256) << (64 - 16);
+					case 2: temp1 |= (unsigned long long)(rand() % 256) << (64 - 24);
+					case 3: temp1 |= (unsigned long long)(rand() % 256) << (64 - 32);
+					case 4: temp1 |= (unsigned long long)(rand() % 256) << (64 - 40);
+					case 5: temp1 |= (unsigned long long)(rand() % 256) << (64 - 48);
+					case 6: temp1 |= (unsigned long long)(rand() % 256) << (64 - 56);
+					default: temp1 |= (unsigned long long)(rand() % 256) << (64 - 64);
+					}
+
+					temp1 = desEncrypt(temp1);
+
+					//Prep new message for output
+					buffer[0] = (temp1 >> (64 - 8)) & 0x00000000000000FF;
+					buffer[1] = (temp1 >> (64 - 16)) & 0x00000000000000FF;
+					buffer[2] = (temp1 >> (64 - 24)) & 0x00000000000000FF;
+					buffer[3] = (temp1 >> (64 - 32)) & 0x00000000000000FF;
+					buffer[4] = (temp1 >> (64 - 40)) & 0x00000000000000FF;
+					buffer[5] = (temp1 >> (64 - 48)) & 0x00000000000000FF;
+					buffer[6] = (temp1 >> (64 - 56)) & 0x00000000000000FF;
+					buffer[7] = (temp1 >> (64 - 64)) & 0x00000000000000FF;
+					outputText.write(reinterpret_cast<char*>(&buffer), 8);
+				}
+			}
+			else if (mode == "cbc")
+			{
+				//Make the Initialization Vector
+				unsigned long long initialVector = ((unsigned long long)rand() % 65536 << 48 | (unsigned long long)rand() % 65536 << 32
+					| (unsigned long long)rand() % 65536 << 16 | (unsigned long long)rand() % 65536);
+				unsigned long long encryptedIV = desEncrypt(initialVector);
+
+				//Prep encrypted IV for output
+				buffer[0] = (encryptedIV >> (64 - 8)) & 0x00000000000000FF;
+				buffer[1] = (encryptedIV >> (64 - 16)) & 0x00000000000000FF;
+				buffer[2] = (encryptedIV >> (64 - 24)) & 0x00000000000000FF;
+				buffer[3] = (encryptedIV >> (64 - 32)) & 0x00000000000000FF;
+				buffer[4] = (encryptedIV >> (64 - 40)) & 0x00000000000000FF;
+				buffer[5] = (encryptedIV >> (64 - 48)) & 0x00000000000000FF;
+				buffer[6] = (encryptedIV >> (64 - 56)) & 0x00000000000000FF;
+				buffer[7] = (encryptedIV >> (64 - 64)) & 0x00000000000000FF;
+				outputText.write(reinterpret_cast<char*>(&buffer), 8);
+
+				//get file length, pad, and encrypt
+				temp1 = ((unsigned long long)rand() % 256 << 32 | (unsigned long long)rand() % 256 << 24 | (unsigned long long)rand() % 256 << 16 | (unsigned long long)rand() % 256 << 8) << 32;
+				unsigned long long fileLengthNGarbage = (temp1 | fileLength);
+				fileLengthNGarbage = initialVector ^ fileLengthNGarbage;	//XOR with IV
+				fileLengthNGarbage = desEncrypt(fileLengthNGarbage);
+
+				//Prep new message for output
+				buffer[0] = (fileLengthNGarbage >> (64 - 8)) & 0x00000000000000FF;
+				buffer[1] = (fileLengthNGarbage >> (64 - 16)) & 0x00000000000000FF;
+				buffer[2] = (fileLengthNGarbage >> (64 - 24)) & 0x00000000000000FF;
+				buffer[3] = (fileLengthNGarbage >> (64 - 32)) & 0x00000000000000FF;
+				buffer[4] = (fileLengthNGarbage >> (64 - 40)) & 0x00000000000000FF;
+				buffer[5] = (fileLengthNGarbage >> (64 - 48)) & 0x00000000000000FF;
+				buffer[6] = (fileLengthNGarbage >> (64 - 56)) & 0x00000000000000FF;
+				buffer[7] = (fileLengthNGarbage >> (64 - 64)) & 0x00000000000000FF;
+				outputText.write(reinterpret_cast<char*>(&buffer), 8);
+
+				//Do DES Stuff here
+				unsigned long long previousCipherBlock = fileLengthNGarbage;	//For CBC we need to XOR with last block
+				while (inputText.read(reinterpret_cast<char*>(&buffer), 8)) {
+					//Process 64 bits of input into usable form for DES
+					temp1 = (unsigned long long)(buffer[0]) << (64 - 8);
+					temp1 |= (unsigned long long)(buffer[1]) << (64 - 16);
+					temp1 |= (unsigned long long)(buffer[2]) << (64 - 24);
+					temp1 |= (unsigned long long)(buffer[3]) << (64 - 32);
+					temp1 |= (unsigned long long)(buffer[4]) << (64 - 40);
+					temp1 |= (unsigned long long)(buffer[5]) << (64 - 48);
+					temp1 |= (unsigned long long)(buffer[6]) << (64 - 56);
+					temp1 |= (unsigned long long)(buffer[7]);
+					temp1 ^= previousCipherBlock;							//CBC Mode
+					previousCipherBlock = temp1 = desEncrypt(temp1);		//encrypt with DES
+
+					//Prep new message for output
+					buffer[0] = (temp1 >> (64 - 8)) & 0x00000000000000FF;
+					buffer[1] = (temp1 >> (64 - 16)) & 0x00000000000000FF;
+					buffer[2] = (temp1 >> (64 - 24)) & 0x00000000000000FF;
+					buffer[3] = (temp1 >> (64 - 32)) & 0x00000000000000FF;
+					buffer[4] = (temp1 >> (64 - 40)) & 0x00000000000000FF;
+					buffer[5] = (temp1 >> (64 - 48)) & 0x00000000000000FF;
+					buffer[6] = (temp1 >> (64 - 56)) & 0x00000000000000FF;
+					buffer[7] = (temp1 >> (64 - 64)) & 0x00000000000000FF;
+					outputText.write(reinterpret_cast<char*>(&buffer), 8);
+				}
+				//check last read to see how many bytes came
+				//pad and encrypt
+				int bytesLeft = inputText.gcount();
+				if (bytesLeft > 0)
+				{
+					temp1 = 0;
+					//Process 64 bits using DES
+					switch (bytesLeft) {
+					case 7: temp1 |= (unsigned long long)(buffer[6]) << (64 - 56);
+					case 6: temp1 |= (unsigned long long)(buffer[5]) << (64 - 48);
+					case 5: temp1 |= (unsigned long long)(buffer[4]) << (64 - 40);
+					case 4: temp1 |= (unsigned long long)(buffer[3]) << (64 - 32);
+					case 3: temp1 |= (unsigned long long)(buffer[2]) << (64 - 24);
+					case 2: temp1 |= (unsigned long long)(buffer[1]) << (64 - 16);
+					case 1: temp1 |= (unsigned long long)(buffer[0]) << (64 - 8);
+					}
+
+					switch (bytesLeft) {
+					case 1: temp1 |= (unsigned long long)(rand() % 256) << (64 - 16);
+					case 2: temp1 |= (unsigned long long)(rand() % 256) << (64 - 24);
+					case 3: temp1 |= (unsigned long long)(rand() % 256) << (64 - 32);
+					case 4: temp1 |= (unsigned long long)(rand() % 256) << (64 - 40);
+					case 5: temp1 |= (unsigned long long)(rand() % 256) << (64 - 48);
+					case 6: temp1 |= (unsigned long long)(rand() % 256) << (64 - 56);
+					default: temp1 |= (unsigned long long)(rand() % 256) << (64 - 64);
+					}
+
+					temp1 ^= previousCipherBlock;							//CBC Mode
+					temp1 = desEncrypt(temp1);
+
+					//Prep new message for output
+					buffer[0] = (temp1 >> (64 - 8)) & 0x00000000000000FF;
+					buffer[1] = (temp1 >> (64 - 16)) & 0x00000000000000FF;
+					buffer[2] = (temp1 >> (64 - 24)) & 0x00000000000000FF;
+					buffer[3] = (temp1 >> (64 - 32)) & 0x00000000000000FF;
+					buffer[4] = (temp1 >> (64 - 40)) & 0x00000000000000FF;
+					buffer[5] = (temp1 >> (64 - 48)) & 0x00000000000000FF;
+					buffer[6] = (temp1 >> (64 - 56)) & 0x00000000000000FF;
+					buffer[7] = (temp1 >> (64 - 64)) & 0x00000000000000FF;
+					outputText.write(reinterpret_cast<char*>(&buffer), 8);
+				}
 			}
 		}
-		else //decrypt
-		{
+		else {
 			//read in first 8 bytes, decrypt, throw away left half, get file size from right
 			inputText.read(reinterpret_cast<char*>(&buffer), 8);
 			temp1 = (unsigned long long)(buffer[0]) << (64 - 8);
@@ -1737,14 +1846,51 @@ int main(int argc, char * argv[])
 			temp1 |= (unsigned long long)(buffer[6]) << (64 - 56);
 			temp1 |= (unsigned long long)(buffer[7]);
 
-			temp1 = desDecrypt(temp1);
-			fileLength = (unsigned int) temp1 & 0x00000000FFFFFFFF;
+			if (mode == "ecb") {
+				temp1 = desDecrypt(temp1);
+				fileLength = (unsigned int)temp1 & 0x00000000FFFFFFFF;
 
-			//Do DES Stuff here
-			bool isNotLastBlock = true;
-			int count = 0;
-			while (inputText.read(reinterpret_cast<char*>(&buffer), 8)) {
-				//Process 64 bits of input into usable form for DES
+				//Do DES Stuff here
+				bool isNotLastBlock = true;
+				int count = 0;
+				while (inputText.read(reinterpret_cast<char*>(&buffer), 8)) {
+					//Process 64 bits of input into usable form for DES
+					temp1 = (unsigned long long)(buffer[0]) << (64 - 8);
+					temp1 |= (unsigned long long)(buffer[1]) << (64 - 16);
+					temp1 |= (unsigned long long)(buffer[2]) << (64 - 24);
+					temp1 |= (unsigned long long)(buffer[3]) << (64 - 32);
+					temp1 |= (unsigned long long)(buffer[4]) << (64 - 40);
+					temp1 |= (unsigned long long)(buffer[5]) << (64 - 48);
+					temp1 |= (unsigned long long)(buffer[6]) << (64 - 56);
+					temp1 |= (unsigned long long)(buffer[7]);
+					temp1 = desDecrypt(temp1);							//encrypt/decrypt with DES
+
+
+					//Prep new message for output
+					buffer[0] = (temp1 >> (64 - 8)) & 0x00000000000000FF;
+					buffer[1] = (temp1 >> (64 - 16)) & 0x00000000000000FF;
+					buffer[2] = (temp1 >> (64 - 24)) & 0x00000000000000FF;
+					buffer[3] = (temp1 >> (64 - 32)) & 0x00000000000000FF;
+					buffer[4] = (temp1 >> (64 - 40)) & 0x00000000000000FF;
+					buffer[5] = (temp1 >> (64 - 48)) & 0x00000000000000FF;
+					buffer[6] = (temp1 >> (64 - 56)) & 0x00000000000000FF;
+					buffer[7] = (temp1 >> (64 - 64)) & 0x00000000000000FF;
+
+					count += 8;
+					isNotLastBlock = count <= fileLength;
+					if (isNotLastBlock)
+						outputText.write(reinterpret_cast<char*>(&buffer), 8);
+					else
+						outputText.write(reinterpret_cast<char*>(&buffer), fileLength % 8);
+				}
+
+			}
+			else if (mode == "cbc")	//decrypt
+			{
+				unsigned long long initialVector = desDecrypt(temp1);
+
+				//read in first 8 bytes, decrypt, get file length
+				inputText.read(reinterpret_cast<char*>(&buffer), 8);
 				temp1 = (unsigned long long)(buffer[0]) << (64 - 8);
 				temp1 |= (unsigned long long)(buffer[1]) << (64 - 16);
 				temp1 |= (unsigned long long)(buffer[2]) << (64 - 24);
@@ -1753,25 +1899,44 @@ int main(int argc, char * argv[])
 				temp1 |= (unsigned long long)(buffer[5]) << (64 - 48);
 				temp1 |= (unsigned long long)(buffer[6]) << (64 - 56);
 				temp1 |= (unsigned long long)(buffer[7]);
-				temp1 = desDecrypt(temp1);							//encrypt/decrypt with DES
-				
 
-				//Prep new message for output
-				buffer[0] = (temp1 >> (64 - 8)) & 0x00000000000000FF;
-				buffer[1] = (temp1 >> (64 - 16)) & 0x00000000000000FF;
-				buffer[2] = (temp1 >> (64 - 24)) & 0x00000000000000FF;
-				buffer[3] = (temp1 >> (64 - 32)) & 0x00000000000000FF;
-				buffer[4] = (temp1 >> (64 - 40)) & 0x00000000000000FF;
-				buffer[5] = (temp1 >> (64 - 48)) & 0x00000000000000FF;
-				buffer[6] = (temp1 >> (64 - 56)) & 0x00000000000000FF;
-				buffer[7] = (temp1 >> (64 - 64)) & 0x00000000000000FF;
+				unsigned long long decryptedText = desDecrypt(temp1) ^ initialVector;
+				unsigned long long previousCipherBlock = temp1;
+				fileLength = (unsigned int)decryptedText & 0x00000000FFFFFFFF;
 
-				count += 8;
-				isNotLastBlock = count <= fileLength;
-				if (isNotLastBlock)
-					outputText.write(reinterpret_cast<char*>(&buffer), 8);
-				else
-					outputText.write(reinterpret_cast<char*>(&buffer), fileLength % 8);
+				//Do DES Stuff here
+				bool isNotLastBlock = true;
+				int count = 0;
+				while (inputText.read(reinterpret_cast<char*>(&buffer), 8)) {
+					//Process 64 bits of input into usable form for DES
+					temp1 = (unsigned long long)(buffer[0]) << (64 - 8);
+					temp1 |= (unsigned long long)(buffer[1]) << (64 - 16);
+					temp1 |= (unsigned long long)(buffer[2]) << (64 - 24);
+					temp1 |= (unsigned long long)(buffer[3]) << (64 - 32);
+					temp1 |= (unsigned long long)(buffer[4]) << (64 - 40);
+					temp1 |= (unsigned long long)(buffer[5]) << (64 - 48);
+					temp1 |= (unsigned long long)(buffer[6]) << (64 - 56);
+					temp1 |= (unsigned long long)(buffer[7]);
+					decryptedText = desDecrypt(temp1) ^ previousCipherBlock;					//encrypt with DES
+					previousCipherBlock = temp1;
+
+					//Prep new message for output
+					buffer[0] = (decryptedText >> (64 - 8)) & 0x00000000000000FF;
+					buffer[1] = (decryptedText >> (64 - 16)) & 0x00000000000000FF;
+					buffer[2] = (decryptedText >> (64 - 24)) & 0x00000000000000FF;
+					buffer[3] = (decryptedText >> (64 - 32)) & 0x00000000000000FF;
+					buffer[4] = (decryptedText >> (64 - 40)) & 0x00000000000000FF;
+					buffer[5] = (decryptedText >> (64 - 48)) & 0x00000000000000FF;
+					buffer[6] = (decryptedText >> (64 - 56)) & 0x00000000000000FF;
+					buffer[7] = (decryptedText >> (64 - 64)) & 0x00000000000000FF;
+
+					count += 8;
+					isNotLastBlock = count <= fileLength;
+					if (isNotLastBlock)
+						outputText.write(reinterpret_cast<char*>(&buffer), 8);
+					else
+						outputText.write(reinterpret_cast<char*>(&buffer), fileLength % 8);
+				}
 			}
 		}
 

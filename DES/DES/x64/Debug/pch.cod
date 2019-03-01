@@ -5,12 +5,12 @@ include listing.inc
 INCLUDELIB MSVCRTD
 INCLUDELIB OLDNAMES
 
-PUBLIC	__@@_PchSym_@00@UfhvihUyillpvLdvylitUwlxfnvmghUwvhUwvhUcGEUwvyftUkxsOlyq@4B2008FD98C1DD4
-;	COMDAT __@@_PchSym_@00@UfhvihUyillpvLdvylitUwlxfnvmghUwvhUwvhUcGEUwvyftUkxsOlyq@4B2008FD98C1DD4
+PUBLIC	__@@_PchSym_@00@UfhvihUyillpvLdvylitUwlxfnvmghUtrgsfyUxibkglUwvhUwvhUcGEUwvyftUkxsOlyq@4B2008FD98C1DD4
+;	COMDAT __@@_PchSym_@00@UfhvihUyillpvLdvylitUwlxfnvmghUtrgsfyUxibkglUwvhUwvhUcGEUwvyftUkxsOlyq@4B2008FD98C1DD4
 _BSS	SEGMENT
-__@@_PchSym_@00@UfhvihUyillpvLdvylitUwlxfnvmghUwvhUwvhUcGEUwvyftUkxsOlyq@4B2008FD98C1DD4 DD 01H DUP (?)
+__@@_PchSym_@00@UfhvihUyillpvLdvylitUwlxfnvmghUtrgsfyUxibkglUwvhUwvhUcGEUwvyftUkxsOlyq@4B2008FD98C1DD4 DD 01H DUP (?)
 _BSS	ENDS
 msvcjmc	SEGMENT
-__EAAC9602_des@pch DB 01H
+__351402EA_des@pch DB 01H
 msvcjmc	ENDS
 END
