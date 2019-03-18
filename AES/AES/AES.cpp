@@ -22,7 +22,7 @@ unsigned int roundKeys[56];	//40 for 10 rounds, 48 for 12 rounds, 56 for 14 roun
 unsigned char state[4][4] = { {0x54, 0x4F, 0x4E, 0x20},
 								{0x77, 0x6E, 0x69, 0x54},
 								{0x6F, 0x65, 0x6E, 0x77},
-								{0X20, 0x20, 0x65, 0x6F} };;	//holds the current state of the message to be encrypted/decrypted
+								{0X20, 0x20, 0x65, 0x6F} };	//holds the current state of the message to be encrypted/decrypted
 unsigned char subBytesSubs[16][16] = { {0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76},
 										{0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0},
 										{0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15},
@@ -55,7 +55,7 @@ unsigned char invSubBytesSubs[16][16] = { {0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0
 									{0x60, 0x51, 0x7f, 0xa9, 0x19, 0xb5, 0x4a, 0x0d, 0x2d, 0xe5, 0x7a, 0x9f, 0x93, 0xc9, 0x9c, 0xef},
 									{0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61},
 									{0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d} };
-unsigned char gfMult2[256] = { 0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1A, 0x1C, 0x1E, 0x20, 0x22, 0x24, 0x26, 0x28, 0x2A, 0x2C, 0x2E, 0x30, 0x32, 0x34, 0x36, 0x38, 0x3A, 0x3C, 0x3E,
+const unsigned char gfMult2[256] = { 0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1A, 0x1C, 0x1E, 0x20, 0x22, 0x24, 0x26, 0x28, 0x2A, 0x2C, 0x2E, 0x30, 0x32, 0x34, 0x36, 0x38, 0x3A, 0x3C, 0x3E,
 								0x40, 0x42, 0x44, 0x46, 0x48, 0x4A, 0x4C, 0x4E, 0x50, 0x52, 0x54, 0x56, 0x58, 0x5A, 0x5C, 0x5E, 0x60, 0x62, 0x64, 0x66, 0x68, 0x6A, 0x6C, 0x6E, 0x70, 0x72, 0x74, 0x76, 0x78, 0x7A, 0x7C, 0x7E,
 								0x80, 0x82, 0x84, 0x86, 0x88, 0x8A, 0x8C, 0x8E, 0x90, 0x92, 0x94, 0x96, 0x98, 0x9A, 0x9C, 0x9E, 0xA0, 0xA2, 0xA4, 0xA6, 0xA8, 0xAA, 0xAC, 0xAE, 0xB0, 0xB2, 0xB4, 0xB6, 0xB8, 0xBA, 0xBC, 0xBE,
 								0xC0, 0xC2, 0xC4, 0xC6, 0xC8, 0xCA, 0xCC, 0xCE, 0xD0, 0xD2, 0xD4, 0xD6, 0xD8, 0xDA, 0xDC, 0xDE, 0xE0, 0xE2, 0xE4, 0xE6, 0xE8, 0xEA, 0xEC, 0xEE, 0xF0, 0xF2, 0xF4, 0xF6, 0xF8, 0xFA, 0xFC, 0xFE,
@@ -63,7 +63,7 @@ unsigned char gfMult2[256] = { 0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E, 0
 								0x5B, 0x59, 0x5F, 0x5D, 0x53, 0x51, 0x57, 0x55, 0x4B, 0x49, 0x4F, 0x4D, 0x43, 0x41, 0x47, 0x45, 0x7B, 0x79, 0x7F, 0x7D, 0x73, 0x71, 0x77, 0x75, 0x6B, 0x69, 0x6F, 0x6D, 0x63, 0x61, 0x67, 0x65,
 								0x9B, 0x99, 0x9F, 0x9D, 0x93, 0x91, 0x97, 0x95, 0x8B, 0x89, 0x8F, 0x8D, 0x83, 0x81, 0x87, 0x85, 0xBB, 0xB9, 0xBF, 0xBD, 0xB3, 0xB1, 0xB7, 0xB5, 0xAB, 0xA9, 0xAF, 0xAD, 0xA3, 0xA1, 0xA7, 0xA5,
 								0xDB, 0xD9, 0xDF, 0xDD, 0xD3, 0xD1, 0xD7, 0xD5, 0xCB, 0xC9, 0xCF, 0xCD, 0xC3, 0xC1, 0xC7, 0xC5, 0xFB, 0xF9, 0xFF, 0xFD, 0xF3, 0xF1, 0xF7, 0xF5, 0xEB, 0xE9, 0xEF, 0xED, 0xE3, 0xE1, 0xE7, 0xE5 };
-unsigned char gfMult3[256] = { 0x00, 0x03, 0x06, 0x05, 0x0C, 0x0F, 0x0A, 0x09, 0x18, 0x1B, 0x1E, 0x1D, 0x14, 0x17, 0x12, 0x11, 0x30, 0x33, 0x36, 0x35, 0x3C, 0x3F, 0x3A, 0x39, 0x28, 0x2B, 0x2E, 0x2D, 0x24, 0x27, 0x22, 0x21,
+const unsigned char gfMult3[256] = { 0x00, 0x03, 0x06, 0x05, 0x0C, 0x0F, 0x0A, 0x09, 0x18, 0x1B, 0x1E, 0x1D, 0x14, 0x17, 0x12, 0x11, 0x30, 0x33, 0x36, 0x35, 0x3C, 0x3F, 0x3A, 0x39, 0x28, 0x2B, 0x2E, 0x2D, 0x24, 0x27, 0x22, 0x21,
 								0x60, 0x63, 0x66, 0x65, 0x6C, 0x6F, 0x6A, 0x69, 0x78, 0x7B, 0x7E, 0x7D, 0x74, 0x77, 0x72, 0x71, 0x50, 0x53, 0x56, 0x55, 0x5C, 0x5F, 0x5A, 0x59, 0x48, 0x4B, 0x4E, 0x4D, 0x44, 0x47, 0x42, 0x41,
 								0xC0, 0xC3, 0xC6, 0xC5, 0xCC, 0xCF, 0xCA, 0xC9, 0xD8, 0xDB, 0xDE, 0xDD, 0xD4, 0xD7, 0xD2, 0xD1, 0xF0, 0xF3, 0xF6, 0xF5, 0xFC, 0xFF, 0xFA, 0xF9, 0xE8, 0xEB, 0xEE, 0xED, 0xE4, 0xE7, 0xE2, 0xE1,
 								0xA0, 0xA3, 0xA6, 0xA5, 0xAC, 0xAF, 0xAA, 0xA9, 0xB8, 0xBB, 0xBE, 0xBD, 0xB4, 0xB7, 0xB2, 0xB1, 0x90, 0x93, 0x96, 0x95, 0x9C, 0x9F, 0x9A, 0x99, 0x88, 0x8B, 0x8E, 0x8D, 0x84, 0x87, 0x82, 0x81,
@@ -71,28 +71,289 @@ unsigned char gfMult3[256] = { 0x00, 0x03, 0x06, 0x05, 0x0C, 0x0F, 0x0A, 0x09, 0
 								0xFB, 0xF8, 0xFD, 0xFE, 0xF7, 0xF4, 0xF1, 0xF2, 0xE3, 0xE0, 0xE5, 0xE6, 0xEF, 0xEC, 0xE9, 0xEA, 0xCB, 0xC8, 0xCD, 0xCE, 0xC7, 0xC4, 0xC1, 0xC2, 0xD3, 0xD0, 0xD5, 0xD6, 0xDF, 0xDC, 0xD9, 0xDA,
 								0x5B, 0x58, 0x5D, 0x5E, 0x57, 0x54, 0x51, 0x52, 0x43, 0x40, 0x45, 0x46, 0x4F, 0x4C, 0x49, 0x4A, 0x6B, 0x68, 0x6D, 0x6E, 0x67, 0x64, 0x61, 0x62, 0x73, 0x70, 0x75, 0x76, 0x7F, 0x7C, 0x79, 0x7A,
 								0x3B, 0x38, 0x3D, 0x3E, 0x37, 0x34, 0x31, 0x32, 0x23, 0x20, 0x25, 0x26, 0x2F, 0x2C, 0x29, 0x2A, 0x0B, 0x08, 0x0D, 0x0E, 0x07, 0x04, 0x01, 0x02, 0x13, 0x10, 0x15, 0x16, 0x1F, 0x1C, 0x19, 0x1A };
-unsigned char key[4][4] = { { 0x54, 0x73, 0x20, 0x67 },
-							{ 0x68, 0x20, 0x4B, 0x20 },
-							{ 0x61, 0x6D, 0x75, 0x46 },
-							{ 0x74, 0x79, 0x6E, 0x75 } };
+const unsigned char gfMultE[256] = { 0x00, 0x0E, 0x1C, 0x12, 0x38, 0x36, 0x24, 0x2A, 0x70, 0x7E, 0x6C, 0x62, 0x48, 0x46, 0x54, 0x5A, 0xE0, 0xEE, 0xFC, 0xF2, 0xD8, 0xD6, 0xC4, 0xCA, 0x90, 0x9E, 0x8C, 0x82, 0xA8, 0xA6, 0xB4, 0xBA,
+								0xDB, 0xD5, 0xC7, 0xC9, 0xE3, 0xED, 0xFF, 0xF1, 0xAB, 0xA5, 0xB7, 0xB9, 0x93, 0x9D, 0x8F, 0x81, 0x3B, 0x35, 0x27, 0x29, 0x03, 0x0D, 0x1F, 0x11, 0x4B, 0x45, 0x57, 0x59, 0x73, 0x7D, 0x6F, 0x61,
+								0xAD, 0xA3, 0xB1, 0xBF, 0x95, 0x9B, 0x89, 0x87, 0xDD, 0xD3, 0xC1, 0xCF, 0xE5, 0xEB, 0xF9, 0xF7, 0x4D, 0x43, 0x51, 0x5F, 0x75, 0x7B, 0x69, 0x67, 0x3D, 0x33, 0x21, 0x2F, 0x05, 0x0B, 0x19, 0x17,
+								0x76, 0x78, 0x6A, 0x64, 0x4E, 0x40, 0x52, 0x5C, 0x06, 0x08, 0x1A, 0x14, 0x3E, 0x30, 0x22, 0x2C, 0x96, 0x98, 0x8A, 0x84, 0xAE, 0xA0, 0xB2, 0xBC, 0xE6, 0xE8, 0xFA, 0xF4, 0xDE, 0xD0, 0xC2, 0xCC,
+								0x41, 0x4F, 0x5D, 0x53, 0x79, 0x77, 0x65, 0x6B, 0x31, 0x3F, 0x2D, 0x23, 0x09, 0x07, 0x15, 0x1B, 0xA1, 0xAF, 0xBD, 0xB3, 0x99, 0x97, 0x85, 0x8B, 0xD1, 0xDF, 0xCD, 0xC3, 0xE9, 0xE7, 0xF5, 0xFB,
+								0x9A, 0x94, 0x86, 0x88, 0xA2, 0xAC, 0xBE, 0xB0, 0xEA, 0xE4, 0xF6, 0xF8, 0xD2, 0xDC, 0xCE, 0xC0, 0x7A, 0x74, 0x66, 0x68, 0x42, 0x4C, 0x5E, 0x50, 0x0A, 0x04, 0x16, 0x18, 0x32, 0x3C, 0x2E, 0x20,
+								0xEC, 0xE2, 0xF0, 0xFE, 0xD4, 0xDA, 0xC8, 0xC6, 0x9C, 0x92, 0x80, 0x8E, 0xA4, 0xAA, 0xB8, 0xB6, 0x0C, 0x02, 0x10, 0x1E, 0x34, 0x3A, 0x28, 0x26, 0x7C, 0x72, 0x60, 0x6E, 0x44, 0x4A, 0x58, 0x56,
+								0x37, 0x39, 0x2B, 0x25, 0x0F, 0x01, 0x13, 0x1D, 0x47, 0x49, 0x5B, 0x55, 0x7F, 0x71, 0x63, 0x6D, 0xD7, 0xD9, 0xCB, 0xC5, 0xEF, 0xE1, 0xF3, 0xFD, 0xA7, 0xA9, 0xBB, 0xB5, 0x9F, 0x91, 0x83, 0x8D };
+const unsigned char gfMultB[256] = { 0x00, 0x0B, 0x16, 0x1D, 0x2C, 0x27, 0x3A, 0x31, 0x58, 0x53, 0x4E, 0x45, 0x74, 0x7F, 0x62, 0x69, 0xB0, 0xBB, 0xA6, 0xAD, 0x9C, 0x97, 0x8A, 0x81, 0xE8, 0xE3, 0xFE, 0xF5, 0xC4, 0xCF, 0xD2, 0xD9,
+							0x7B, 0x70, 0x6D, 0x66, 0x57, 0x5C, 0x41, 0x4A, 0x23, 0x28, 0x35, 0x3E, 0x0F, 0x04, 0x19, 0x12, 0xCB, 0xC0, 0xDD, 0xD6, 0xE7, 0xEC, 0xF1, 0xFA, 0x93, 0x98, 0x85, 0x8E, 0xBF, 0xB4, 0xA9, 0xA2,
+							0xF6, 0xFD, 0xE0, 0xEB, 0xDA, 0xD1, 0xCC, 0xC7, 0xAE, 0xA5, 0xB8, 0xB3, 0x82, 0x89, 0x94, 0x9F, 0x46, 0x4D, 0x50, 0x5B, 0x6A, 0x61, 0x7C, 0x77, 0x1E, 0x15, 0x08, 0x03, 0x32, 0x39, 0x24, 0x2F,
+							0x8D, 0x86, 0x9B, 0x90, 0xA1, 0xAA, 0xB7, 0xBC, 0xD5, 0xDE, 0xC3, 0xC8, 0xF9, 0xF2, 0xEF, 0xE4, 0x3D, 0x36, 0x2B, 0x20, 0x11, 0x1A, 0x07, 0x0C, 0x65, 0x6E, 0x73, 0x78, 0x49, 0x42, 0x5F, 0x54,
+							0xF7, 0xFC, 0xE1, 0xEA, 0xDB, 0xD0, 0xCD, 0xC6, 0xAF, 0xA4, 0xB9, 0xB2, 0x83, 0x88, 0x95, 0x9E, 0x47, 0x4C, 0x51, 0x5A, 0x6B, 0x60, 0x7D, 0x76, 0x1F, 0x14, 0x09, 0x02, 0x33, 0x38, 0x25, 0x2E,
+							0x8C, 0x87, 0x9A, 0x91, 0xA0, 0xAB, 0xB6, 0xBD, 0xD4, 0xDF, 0xC2, 0xC9, 0xF8, 0xF3, 0xEE, 0xE5, 0x3C, 0x37, 0x2A, 0x21, 0x10, 0x1B, 0x06, 0x0D, 0x64, 0x6F, 0x72, 0x79, 0x48, 0x43, 0x5E, 0x55,
+							0x01, 0x0A, 0x17, 0x1C, 0x2D, 0x26, 0x3B, 0x30, 0x59, 0x52, 0x4F, 0x44, 0x75, 0x7E, 0x63, 0x68, 0xB1, 0xBA, 0xA7, 0xAC, 0x9D, 0x96, 0x8B, 0x80, 0xE9, 0xE2, 0xFF, 0xF4, 0xC5, 0xCE, 0xD3, 0xD8,
+							0x7A, 0x71, 0x6C, 0x67, 0x56, 0x5D, 0x40, 0x4B, 0x22, 0x29, 0x34, 0x3F, 0x0E, 0x05, 0x18, 0x13, 0xCA, 0xC1, 0xDC, 0xD7, 0xE6, 0xED, 0xF0, 0xFB, 0x92, 0x99, 0x84, 0x8F, 0xBE, 0xB5, 0xA8, 0xA3 };
+const unsigned char gfMultD[256] = { 0x00, 0x0D, 0x1A, 0x17, 0x34, 0x39, 0x2E, 0x23, 0x68, 0x65, 0x72, 0x7F, 0x5C, 0x51, 0x46, 0x4B, 0xD0, 0xDD, 0xCA, 0xC7, 0xE4, 0xE9, 0xFE, 0xF3, 0xB8, 0xB5, 0xA2, 0xAF, 0x8C, 0x81, 0x96, 0x9B,
+								0xBB, 0xB6, 0xA1, 0xAC, 0x8F, 0x82, 0x95, 0x98, 0xD3, 0xDE, 0xC9, 0xC4, 0xE7, 0xEA, 0xFD, 0xF0, 0x6B, 0x66, 0x71, 0x7C, 0x5F, 0x52, 0x45, 0x48, 0x03, 0x0E, 0x19, 0x14, 0x37, 0x3A, 0x2D, 0x20,
+								0x6D, 0x60, 0x77, 0x7A, 0x59, 0x54, 0x43, 0x4E, 0x05, 0x08, 0x1F, 0x12, 0x31, 0x3C, 0x2B, 0x26, 0xBD, 0xB0, 0xA7, 0xAA, 0x89, 0x84, 0x93, 0x9E, 0xD5, 0xD8, 0xCF, 0xC2, 0xE1, 0xEC, 0xFB, 0xF6,
+								0xD6, 0xDB, 0xCC, 0xC1, 0xE2, 0xEF, 0xF8, 0xF5, 0xBE, 0xB3, 0xA4, 0xA9, 0x8A, 0x87, 0x90, 0x9D, 0x06, 0x0B, 0x1C, 0x11, 0x32, 0x3F, 0x28, 0x25, 0x6E, 0x63, 0x74, 0x79, 0x5A, 0x57, 0x40, 0x4D,
+								0xDA, 0xD7, 0xC0, 0xCD, 0xEE, 0xE3, 0xF4, 0xF9, 0xB2, 0xBF, 0xA8, 0xA5, 0x86, 0x8B, 0x9C, 0x91, 0x0A, 0x07, 0x10, 0x1D, 0x3E, 0x33, 0x24, 0x29, 0x62, 0x6F, 0x78, 0x75, 0x56, 0x5B, 0x4C, 0x41,
+								0x61, 0x6C, 0x7B, 0x76, 0x55, 0x58, 0x4F, 0x42, 0x09, 0x04, 0x13, 0x1E, 0x3D, 0x30, 0x27, 0x2A, 0xB1, 0xBC, 0xAB, 0xA6, 0x85, 0x88, 0x9F, 0x92, 0xD9, 0xD4, 0xC3, 0xCE, 0xED, 0xE0, 0xF7, 0xFA,
+								0xB7, 0xBA, 0xAD, 0xA0, 0x83, 0x8E, 0x99, 0x94, 0xDF, 0xD2, 0xC5, 0xC8, 0xEB, 0xE6, 0xF1, 0xFC, 0x67, 0x6A, 0x7D, 0x70, 0x53, 0x5E, 0x49, 0x44, 0x0F, 0x02, 0x15, 0x18, 0x3B, 0x36, 0x21, 0x2C,
+								0x0C, 0x01, 0x16, 0x1B, 0x38, 0x35, 0x22, 0x2F, 0x64, 0x69, 0x7E, 0x73, 0x50, 0x5D, 0x4A, 0x47, 0xDC, 0xD1, 0xC6, 0xCB, 0xE8, 0xE5, 0xF2, 0xFF, 0xB4, 0xB9, 0xAE, 0xA3, 0x80, 0x8D, 0x9A, 0x97 };
+const unsigned char gfMult9[256] = { 0x00, 0x09, 0x12, 0x1B, 0x24, 0x2D, 0x36, 0x3F, 0x48, 0x41, 0x5A, 0x53, 0x6C, 0x65, 0x7E, 0x77, 0x90, 0x99, 0x82, 0x8B, 0xB4, 0xBD, 0xA6, 0xAF, 0xD8, 0xD1, 0xCA, 0xC3, 0xFC, 0xF5, 0xEE, 0xE7,
+								0x3B, 0x32, 0x29, 0x20, 0x1F, 0x16, 0x0D, 0x04, 0x73, 0x7A, 0x61, 0x68, 0x57, 0x5E, 0x45, 0x4C, 0xAB, 0xA2, 0xB9, 0xB0, 0x8F, 0x86, 0x9D, 0x94, 0xE3, 0xEA, 0xF1, 0xF8, 0xC7, 0xCE, 0xD5, 0xDC,
+								0x76, 0x7F, 0x64, 0x6D, 0x52, 0x5B, 0x40, 0x49, 0x3E, 0x37, 0x2C, 0x25, 0x1A, 0x13, 0x08, 0x01, 0xE6, 0xEF, 0xF4, 0xFD, 0xC2, 0xCB, 0xD0, 0xD9, 0xAE, 0xA7, 0xBC, 0xB5, 0x8A, 0x83, 0x98, 0x91,
+								0x4D, 0x44, 0x5F, 0x56, 0x69, 0x60, 0x7B, 0x72, 0x05, 0x0C, 0x17, 0x1E, 0x21, 0x28, 0x33, 0x3A, 0xDD, 0xD4, 0xCF, 0xC6, 0xF9, 0xF0, 0xEB, 0xE2, 0x95, 0x9C, 0x87, 0x8E, 0xB1, 0xB8, 0xA3, 0xAA,
+								0xEC, 0xE5, 0xFE, 0xF7, 0xC8, 0xC1, 0xDA, 0xD3, 0xA4, 0xAD, 0xB6, 0xBF, 0x80, 0x89, 0x92, 0x9B, 0x7C, 0x75, 0x6E, 0x67, 0x58, 0x51, 0x4A, 0x43, 0x34, 0x3D, 0x26, 0x2F, 0x10, 0x19, 0x02, 0x0B,
+								0xD7, 0xDE, 0xC5, 0xCC, 0xF3, 0xFA, 0xE1, 0xE8, 0x9F, 0x96, 0x8D, 0x84, 0xBB, 0xB2, 0xA9, 0xA0, 0x47, 0x4E, 0x55, 0x5C, 0x63, 0x6A, 0x71, 0x78, 0x0F, 0x06, 0x1D, 0x14, 0x2B, 0x22, 0x39, 0x30,
+								0x9A, 0x93, 0x88, 0x81, 0xBE, 0xB7, 0xAC, 0xA5, 0xD2, 0xDB, 0xC0, 0xC9, 0xF6, 0xFF, 0xE4, 0xED, 0x0A, 0x03, 0x18, 0x11, 0x2E, 0x27, 0x3C, 0x35, 0x42, 0x4B, 0x50, 0x59, 0x66, 0x6F, 0x74, 0x7D,
+								0xA1, 0xA8, 0xB3, 0xBA, 0x85, 0x8C, 0x97, 0x9E, 0xE9, 0xE0, 0xFB, 0xF2, 0xCD, 0xC4, 0xDF, 0xD6, 0x31, 0x38, 0x23, 0x2A, 0x15, 0x1C, 0x07, 0x0E, 0x79, 0x70, 0x6B, 0x62, 0x5D, 0x54, 0x4F, 0x46 };
+const int maxRounds = 14;
+const int maxWordsKey = 8;
+const unsigned int roundConstants[maxRounds+1] = {0, 0x01 << 24, 0x02 << 24, 0x04 << 24, 0x08 << 24, 
+													0x10 << 24, 0x20 << 24, 0x40 << 24, 0x80 << 24, 
+													0x1B << 24, 0x36 << 24};
+unsigned char key[maxRounds][4][4] = { 0 };
+int rounds = 10;
 
-void tenRoundKeys(unsigned int key[]) {
-
-}
-
-void twelveRoundKeys(unsigned int key[]) {
-
-}
-
-void fourteenRoundKeys(unsigned int key[]) {
-
-}
-
-void generateKeys(unsigned int key[], int length) 
+/*Precondition: Takes a character representing a hex value
+Postcondition: creates a true integer representation but as a character */
+unsigned char charHexValue(unsigned char c)
 {
-	if (length == 32)		tenRoundKeys(key);
-	else if (length == 48)	twelveRoundKeys(key);
-	else if (length == 64)	fourteenRoundKeys(key);
+	if (c >= 0x30 && c <= 0x39)						//0 - 9 subtract 30 hex
+		c = c - 0x30;
+	else if ((c >= 65 && c <= 70) || (c >= 97 && c <= 102)) //A-F subtract 37 hex
+	{
+		c = toupper(c);
+		c = c - 0x37;
+	}
+	else {
+		cerr << "Error: Invalid hex character.";
+		exit(1);
+	}
+	return c;
+}
+
+unsigned int subWord(unsigned int t) {
+	unsigned int newT = 0;
+	newT = subBytesSubs[t >> 28][(t >> 24) & 0x0F] << 24;
+	newT |= subBytesSubs[(t >> 20) & 0x0F][(t >> 16) & 0x0F] << 16;
+	newT |= subBytesSubs[(t >> 12 & 0x0F)][(t >> 8) & 0x0F] << 8;
+	newT |= subBytesSubs[(t >> 4) & 0x0F][(t) & 0x0F];
+
+	return newT;
+}
+
+void tenRoundKeys(unsigned int keyWords[]) {
+	int rounds = 10;
+	unsigned int t, upperByte, index;
+	unsigned int words[44] = { 0 };
+	words[0] = keyWords[0];
+	words[1] = keyWords[1];
+	words[2] = keyWords[2];
+	words[3] = keyWords[3];
+
+	for (int i = 1; i <= rounds; i++) {
+		index = i * 4;
+		//make t
+		t = words[index-1];
+		//one-byte left rotate
+		upperByte = t >> 24;
+		t <<= 8;
+		t |= upperByte;
+		t &= 0x0FFFFFFFF;
+		//run through SubWord
+		t = subWord(t);
+		//add round constant
+		t ^= roundConstants[i];
+
+		//generate the four words of the key for this round
+		words[index] = t ^ words[index - 4];
+		words[index+1] = words[index] ^ words[index - 3];
+		words[index+2] = words[index + 1] ^ words[index - 2];
+		words[index+3] = words[index + 2] ^ words[index - 1];
+
+		//store new key
+		key[i][0][0] = words[index] >> 24;
+		key[i][1][0] = words[index] >> 16;
+		key[i][2][0] = words[index] >> 8;
+		key[i][3][0] = words[index];
+		key[i][0][1] = words[index+1] >> 24;
+		key[i][1][1] = words[index+1] >> 16;
+		key[i][2][1] = words[index+1] >> 8;
+		key[i][3][1] = words[index+1];
+		key[i][0][2] = words[index+2] >> 24;
+		key[i][1][2] = words[index+2] >> 16;
+		key[i][2][2] = words[index+2] >> 8;
+		key[i][3][2] = words[index+2];
+		key[i][0][3] = words[index+3] >> 24;
+		key[i][1][3] = words[index+3] >> 16;
+		key[i][2][3] = words[index+3] >> 8;
+		key[i][3][3] = words[index+3];
+	}
+}
+
+void twelveRoundKeys(unsigned int keyWords[]) {
+	int rounds = 12;
+	unsigned int t, upperByte, index;
+	unsigned int words[52] = { 0 };
+	words[0] = keyWords[0];
+	words[1] = keyWords[1];
+	words[2] = keyWords[2];
+	words[3] = keyWords[3];
+	words[4] = keyWords[4];
+	words[5] = keyWords[5];
+
+	for (int i = 1; i <= rounds; i++) {
+		index = i * 6;
+		//make t
+		t = words[index - 1];
+		//one-byte left rotate
+		upperByte = t >> 24;
+		t <<= 8;
+		t |= upperByte;
+		t &= 0x0FFFFFFFF;
+		//run through SubWord
+		t = subWord(t);
+		//add round constant
+		t ^= roundConstants[i];
+
+		//generate the four words of the key for this round
+		words[index] = t ^ words[index - 6];
+		words[index + 1] = words[index] ^ words[index - 5];
+		words[index + 2] = words[index + 1] ^ words[index - 4];
+		words[index + 3] = words[index + 2] ^ words[index - 3];
+		words[index + 4] = words[index + 3] ^ words[index - 2];
+		words[index + 5] = words[index + 4] ^ words[index - 1];
+
+		//store new key
+		key[i][0][0] = words[index] >> 24;
+		key[i][1][0] = words[index] >> 16;
+		key[i][2][0] = words[index] >> 8;
+		key[i][3][0] = words[index];
+		key[i][0][1] = words[index + 1] >> 24;
+		key[i][1][1] = words[index + 1] >> 16;
+		key[i][2][1] = words[index + 1] >> 8;
+		key[i][3][1] = words[index + 1];
+		key[i][0][2] = words[index + 2] >> 24;
+		key[i][1][2] = words[index + 2] >> 16;
+		key[i][2][2] = words[index + 2] >> 8;
+		key[i][3][2] = words[index + 2];
+		key[i][0][3] = words[index + 3] >> 24;
+		key[i][1][3] = words[index + 3] >> 16;
+		key[i][2][3] = words[index + 3] >> 8;
+		key[i][3][3] = words[index + 3];
+	}
+}
+
+void fourteenRoundKeys(unsigned int keyWords[]) {
+	int rounds = 14;
+	unsigned int t, upperByte, index, temp;
+	unsigned int words[60] = { 0 };
+	words[0] = keyWords[0];
+	words[1] = keyWords[1];
+	words[2] = keyWords[2];
+	words[3] = keyWords[3];
+	words[4] = keyWords[4];
+	words[5] = keyWords[5];
+	words[6] = keyWords[6];
+	words[7] = keyWords[7];
+
+	for (int i = 1; i <= rounds; i++) {
+		index = i * 8;
+		//make t
+		t = words[index - 1];
+		//one-byte left rotate
+		upperByte = t >> 24;
+		t <<= 8;
+		t |= upperByte;
+		t &= 0x0FFFFFFFF;
+		//run through SubWord
+		t = subWord(t);
+		//add round constant
+		t ^= roundConstants[i];
+
+		//generate the eight words of the key for this round
+		words[index] = t ^ words[index - 8];
+		words[index + 1] = words[index] ^ words[index - 7];
+		words[index + 2] = words[index + 1] ^ words[index - 6];
+		words[index + 3] = words[index + 2] ^ words[index - 5];
+		words[index + 4] = words[index + 3] ^ words[index - 4];
+		temp = subWord(words[index + 3]);
+		words[index + 5] = temp ^ words[index - 3];
+		words[index + 6] = words[index + 5] ^ words[index - 2];
+		words[index + 7] = words[index + 6] ^ words[index - 1];
+
+		//store new key
+		key[i][0][0] = words[index] >> 24;
+		key[i][1][0] = words[index] >> 16;
+		key[i][2][0] = words[index] >> 8;
+		key[i][3][0] = words[index];
+		key[i][0][1] = words[index + 1] >> 24;
+		key[i][1][1] = words[index + 1] >> 16;
+		key[i][2][1] = words[index + 1] >> 8;
+		key[i][3][1] = words[index + 1];
+		key[i][0][2] = words[index + 2] >> 24;
+		key[i][1][2] = words[index + 2] >> 16;
+		key[i][2][2] = words[index + 2] >> 8;
+		key[i][3][2] = words[index + 2];
+		key[i][0][3] = words[index + 3] >> 24;
+		key[i][1][3] = words[index + 3] >> 16;
+		key[i][2][3] = words[index + 3] >> 8;
+		key[i][3][3] = words[index + 3];
+	}
+}
+
+void generateKeys(string keyString, int rounds) 
+{
+	//parse key string into hex values
+	int keyLength = keyString.length();
+	unsigned char hex0, hex1, hex2, hex3, hex4, hex5, hex6, hex7 = 0;
+	unsigned int keyWords[maxWordsKey] = { 0 };
+	int i = 0;
+	int index = 0;
+	while (i < keyLength) {
+		//grab 4 bytes to make a word
+		hex0 = charHexValue(keyString[i]);
+		hex1 = charHexValue(keyString[++i]);
+		hex2 = charHexValue(keyString[++i]);
+		hex3 = charHexValue(keyString[++i]);
+		hex4 = charHexValue(keyString[++i]);
+		hex5 = charHexValue(keyString[++i]);
+		hex6 = charHexValue(keyString[++i]);
+		hex7 = charHexValue(keyString[++i]);
+		i++;
+		keyWords[index++] = hex0 << 28 | hex1 << 24 | hex2 << 20 
+						| hex3 << 16 | hex4 << 12 | hex5 << 8 
+						| hex6 << 4 | hex7;
+	}
+
+	//store k0
+	//column 0
+	key[0][0][0] = (keyWords[0] >> 24) & 0x0FF;
+	key[0][1][0] = (keyWords[0] >> 16) & 0x0FF;
+	key[0][2][0] = (keyWords[0] >> 8)  & 0x0FF;
+	key[0][3][0] = (keyWords[0] >> 0)  & 0x0FF;
+	//column 1
+	key[0][0][1] = (keyWords[1] >> 24) & 0x0FF;
+	key[0][1][1] = (keyWords[1] >> 16) & 0x0FF;
+	key[0][2][1] = (keyWords[1] >> 8) & 0x0FF;
+	key[0][3][1] = (keyWords[1] >> 0) & 0x0FF;
+	//column 2
+	key[0][0][2] = (keyWords[2] >> 24) & 0x0FF;
+	key[0][1][2] = (keyWords[2] >> 16) & 0x0FF;
+	key[0][2][2] = (keyWords[2] >> 8) & 0x0FF;
+	key[0][3][2] = (keyWords[2] >> 0) & 0x0FF;
+	//column 3
+	key[0][0][3] = (keyWords[3] >> 24) & 0x0FF;
+	key[0][1][3] = (keyWords[3] >> 16) & 0x0FF;
+	key[0][2][3] = (keyWords[3] >> 8) & 0x0FF;
+	key[0][3][3] = (keyWords[3] >> 0) & 0x0FF;
+
+	//Generate other round keys
+	switch (rounds) {
+	case 10:	tenRoundKeys(keyWords);
+				break;
+	case 12:	twelveRoundKeys(keyWords);
+				break;
+	case 14:	fourteenRoundKeys(keyWords);
+				break;
+	}
 }
 
 void subBytes() {
@@ -212,41 +473,420 @@ void invShiftRows() {
 }
 
 void mixColumns() {
-	state[0][0] = (gfMult2[state[0][0]] ^ gfMult3[state[1][0]] ^ state[2][0] ^ state[3][0]);
-	state[1][0] = state[0][0] ^ gfMult2[state[1][0]] ^ gfMult3[state[2][0]] ^ state[3][0];
-	state[2][0] = state[0][0] ^ state[1][0] ^ gfMult2[state[2][0]] ^ gfMult3[state[3][0]];
-	state[3][0] = gfMult3[state[0][0]] ^ state[1][0] ^ state[2][0] ^ gfMult2[state[3][0]];
+	unsigned char b1 = (gfMult2[state[0][0]] ^ gfMult3[state[1][0]] ^ state[2][0] ^ state[3][0]);
+	unsigned char b2 = state[0][0] ^ gfMult2[state[1][0]] ^ gfMult3[state[2][0]] ^ state[3][0];
+	unsigned char b3 = state[0][0] ^ state[1][0] ^ gfMult2[state[2][0]] ^ gfMult3[state[3][0]];
+	unsigned char b4 = gfMult3[state[0][0]] ^ state[1][0] ^ state[2][0] ^ gfMult2[state[3][0]];
+	state[0][0] = b1;
+	state[1][0] = b2;
+	state[2][0] = b3;
+	state[3][0] = b4;
 
+	b1 = (gfMult2[state[0][1]] ^ gfMult3[state[1][1]] ^ state[2][1] ^ state[3][1]);
+	b2 = state[0][1] ^ gfMult2[state[1][1]] ^ gfMult3[state[2][1]] ^ state[3][1];
+	b3 = state[0][1] ^ state[1][1] ^ gfMult2[state[2][1]] ^ gfMult3[state[3][1]];
+	b4 = gfMult3[state[0][1]] ^ state[1][1] ^ state[2][1] ^ gfMult2[state[3][1]];
+	state[0][1] = b1;
+	state[1][1] = b2;
+	state[2][1] = b3;
+	state[3][1] = b4;
+
+	b1 = (gfMult2[state[0][2]] ^ gfMult3[state[1][2]] ^ state[2][2] ^ state[3][2]);
+	b2 = state[0][2] ^ gfMult2[state[1][2]] ^ gfMult3[state[2][2]] ^ state[3][2];
+	b3 = state[0][2] ^ state[1][2] ^ gfMult2[state[2][2]] ^ gfMult3[state[3][2]];
+	b4 = gfMult3[state[0][2]] ^ state[1][2] ^ state[2][2] ^ gfMult2[state[3][2]];
+	state[0][2] = b1;
+	state[1][2] = b2;
+	state[2][2] = b3;
+	state[3][2] = b4;
+
+	b1 = (gfMult2[state[0][3]] ^ gfMult3[state[1][3]] ^ state[2][3] ^ state[3][3]);
+	b2 = state[0][3] ^ gfMult2[state[1][3]] ^ gfMult3[state[2][3]] ^ state[3][3];
+	b3 = state[0][3] ^ state[1][3] ^ gfMult2[state[2][3]] ^ gfMult3[state[3][3]];
+	b4 = gfMult3[state[0][3]] ^ state[1][3] ^ state[2][3] ^ gfMult2[state[3][3]];
+	state[0][3] = b1;
+	state[1][3] = b2;
+	state[2][3] = b3;
+	state[3][3] = b4;
 }
 
-void aesEncrypt(int rounds) {
-	//whitening
-	state[0][0] = state[0][0] ^ key[0][0];
-	state[0][1] = state[0][1] ^ key[0][1];
-	state[0][2] = state[0][2] ^ key[0][2];
-	state[0][3] = state[0][3] ^ key[0][3];
-	state[1][0] = state[1][0] ^ key[1][0];
-	state[1][1] = state[1][1] ^ key[1][1];
-	state[1][2] = state[1][2] ^ key[1][2];
-	state[1][3] = state[1][3] ^ key[1][3];
-	state[2][0] = state[2][0] ^ key[2][0];
-	state[2][1] = state[2][1] ^ key[2][1];
-	state[2][2] = state[2][2] ^ key[2][2];
-	state[2][3] = state[2][3] ^ key[2][3];
-	state[3][0] = state[3][0] ^ key[3][0];
-	state[3][1] = state[3][1] ^ key[3][1];
-	state[3][2] = state[3][2] ^ key[3][2];
-	state[3][3] = state[3][3] ^ key[3][3];
+void invMixColumns() {
+	unsigned char b1 = (gfMultE[state[0][0]] ^ gfMultB[state[1][0]] ^ gfMultD[state[2][0]] ^ gfMult9[state[3][0]]);
+	unsigned char b2 = gfMult9[state[0][0]] ^ gfMultE[state[1][0]] ^ gfMultB[state[2][0]] ^ gfMultD[state[3][0]];
+	unsigned char b3 = gfMultD[state[0][0]] ^ gfMult9[state[1][0]] ^ gfMultE[state[2][0]] ^ gfMultB[state[3][0]];
+	unsigned char b4 = gfMultB[state[0][0]] ^ gfMultD[state[1][0]] ^ gfMult9[state[2][0]] ^ gfMultE[state[3][0]];
+	state[0][0] = b1;
+	state[1][0] = b2;
+	state[2][0] = b3;
+	state[3][0] = b4;
 
-	for (int i = 0; i < rounds; i++) {
+	b1 = (gfMultE[state[0][1]] ^ gfMultB[state[1][1]] ^ gfMultD[state[2][1]] ^ gfMult9[state[3][1]]);
+	b2 = gfMult9[state[0][1]] ^ gfMultE[state[1][1]] ^ gfMultB[state[2][1]] ^ gfMultD[state[3][1]];
+	b3 = gfMultD[state[0][1]] ^ gfMult9[state[1][1]] ^ gfMultE[state[2][1]] ^ gfMultB[state[3][1]];
+	b4 = gfMultB[state[0][1]] ^ gfMultD[state[1][1]] ^ gfMult9[state[2][1]] ^ gfMultE[state[3][1]];
+	state[0][1] = b1;
+	state[1][1] = b2;
+	state[2][1] = b3;
+	state[3][1] = b4;
+
+	b1 = (gfMultE[state[0][2]] ^ gfMultB[state[1][2]] ^ gfMultD[state[2][2]] ^ gfMult9[state[3][2]]);
+	b2 = gfMult9[state[0][2]] ^ gfMultE[state[1][2]] ^ gfMultB[state[2][2]] ^ gfMultD[state[3][2]];
+	b3 = gfMultD[state[0][2]] ^ gfMult9[state[1][2]] ^ gfMultE[state[2][2]] ^ gfMultB[state[3][2]];
+	b4 = gfMultB[state[0][2]] ^ gfMultD[state[1][2]] ^ gfMult9[state[2][2]] ^ gfMultE[state[3][2]];
+	state[0][2] = b1;
+	state[1][2] = b2;
+	state[2][2] = b3;
+	state[3][2] = b4;
+
+	b1 = (gfMultE[state[0][3]] ^ gfMultB[state[1][3]] ^ gfMultD[state[2][3]] ^ gfMult9[state[3][3]]);
+	b2 = gfMult9[state[0][3]] ^ gfMultE[state[1][3]] ^ gfMultB[state[2][3]] ^ gfMultD[state[3][3]];
+	b3 = gfMultD[state[0][3]] ^ gfMult9[state[1][3]] ^ gfMultE[state[2][3]] ^ gfMultB[state[3][3]];
+	b4 = gfMultB[state[0][3]] ^ gfMultD[state[1][3]] ^ gfMult9[state[2][3]] ^ gfMultE[state[3][3]];
+	state[0][3] = b1;
+	state[1][3] = b2;
+	state[2][3] = b3;
+	state[3][3] = b4;
+}
+
+void addRoundKey(int keyNum) {
+	state[0][0] = state[0][0] ^ key[keyNum][0][0];
+	state[1][0] = state[1][0] ^ key[keyNum][1][0];
+	state[2][0] = state[2][0] ^ key[keyNum][2][0];
+	state[3][0] = state[3][0] ^ key[keyNum][3][0];
+	state[0][1] = state[0][1] ^ key[keyNum][0][1];
+	state[1][1] = state[1][1] ^ key[keyNum][1][1];
+	state[2][1] = state[2][1] ^ key[keyNum][2][1];
+	state[3][1] = state[3][1] ^ key[keyNum][3][1];
+	state[0][2] = state[0][2] ^ key[keyNum][0][2];
+	state[1][2] = state[1][2] ^ key[keyNum][1][2];
+	state[2][2] = state[2][2] ^ key[keyNum][2][2];
+	state[3][2] = state[3][2] ^ key[keyNum][3][2];
+	state[0][3] = state[0][3] ^ key[keyNum][0][3];
+	state[1][3] = state[1][3] ^ key[keyNum][1][3];
+	state[2][3] = state[2][3] ^ key[keyNum][2][3];
+	state[3][3] = state[3][3] ^ key[keyNum][3][3];
+}
+
+void aesEncrypt() {
+	//whitening
+	addRoundKey(0);
+
+	for (int i = 1; i < rounds; i++) {
 		subBytes();
 		shiftRows();
 		mixColumns();
-		//addRoundKey();
+		addRoundKey(i);
 	}
+	subBytes();
+	shiftRows();
+	addRoundKey(rounds);
 }
 
-int main()
+void aesDecrypt() {
+	//whitening
+	addRoundKey(rounds);
+
+	for (int i = rounds-1; i > 0; i--) {
+		invShiftRows();
+		invBytesSub();
+		addRoundKey(i);
+		invMixColumns();
+	}
+	invShiftRows();
+	invBytesSub();
+	addRoundKey(0);
+}
+
+void stateRandom() {
+	//garbage
+	state[0][0] = (unsigned int)rand() % 256;
+	state[1][0] = (unsigned int)rand() % 256;
+	state[2][0] = (unsigned int)rand() % 256;
+	state[3][0] = (unsigned int)rand() % 256;
+	state[0][1] = (unsigned int)rand() % 256;
+	state[1][1] = (unsigned int)rand() % 256;
+	state[2][1] = (unsigned int)rand() % 256;
+	state[3][1] = (unsigned int)rand() % 256;
+	state[0][2] = (unsigned int)rand() % 256;
+	state[1][2] = (unsigned int)rand() % 256;
+	state[2][2] = (unsigned int)rand() % 256;
+	state[3][2] = (unsigned int)rand() % 256;
+	state[0][3] = (unsigned int)rand() % 256;
+	state[1][3] = (unsigned int)rand() % 256;
+	state[2][3] = (unsigned int)rand() % 256;
+	state[3][3] = (unsigned int)rand() % 256;
+}
+
+int main(int argc, char * argv[])
 {
-	aesEncrypt(10);
+	clock_t start = clock();	//start a timer
+	//Go through command line parameters and make sure it's all hunky-dory
+	//Accepted command line input
+	//<–action> <key> <mode> <infile> <outfile>
+	int length = argc;
+	if (length != 6) {			//did we receive the correct amount of arguments
+		cerr << "Error: Bad input. This program accepts the following arguments: <action> <key> <mode> <infile> <outfile>\n";
+		exit(1);				//exit 1 is bad input
+	}
+
+	//Are we encrypting or decrypting?
+	string arg1 = argv[1];
+	bool isEncrypt = true;
+	if (arg1 == "-d" || arg1 == "-D")
+		isEncrypt = false;
+	else if (arg1 != "-e" && arg1 != "-E")
+	{
+		cerr << "Error: Bad input: Action must be specified as -e or -d. <action> <key> <mode> <infile> <outfile>\n";
+		exit(1);
+	}
+
+	//get the key
+	string keyString = argv[2];
+	rounds = keyString.length();
+	if (rounds == 32) rounds = 10;
+	else if (rounds == 48) rounds = 12;
+	else if (rounds == 64) rounds = 14;
+	generateKeys(keyString, rounds);
+
+	//get the mode
+	string temp = argv[3];
+	string mode = "";
+	for (short i = 0; i < temp.length(); i++)	//make everything lowercase
+		mode += tolower(temp[i]);
+
+	if (!(mode == "ecb" || mode == "cbc"))
+	{
+		cerr << "Error: Bad Input. ECB and CBC are only accepted. <action> <key> <mode> <infile> <outfile>\n";
+		exit(1);
+	}
+
+	//open input and output streams
+	string infile = argv[4];
+	string outfile = argv[5];
+
+	try
+	{
+		unsigned int fileLength = 0; //contains length of file - yippy
+
+		ifstream inputText(infile, ifstream::binary);
+		unsigned char buffer[16];
+		if (!inputText.is_open())	//see if it's open
+		{
+			cerr << "Error: File cannot be read.";
+			exit(1);
+		}
+
+		//output stream setup
+		ofstream outputText(outfile, ofstream::binary);
+		outputText.exceptions(ofstream::failbit | ofstream::badbit);
+
+		if (isEncrypt)
+		{
+			//get length of file, pad on left, encrypt, and write to file
+			inputText.seekg(0, inputText.end);
+			fileLength = inputText.tellg();
+			inputText.seekg(0, inputText.beg);
+
+			srand(start);
+		
+			if (mode == "ecb") {
+				stateRandom();				//puts garbage in the state
+				//put file length in the last 32 bits
+				state[0][3] = fileLength >> 24;
+				state[1][3] = (fileLength >> 16) & 0x0FF;
+				state[2][3] = (fileLength >> 8) & 0x0FF;
+				state[3][3] = (fileLength) & 0x0FF;
+				aesEncrypt();				//encrypt the fileLength 
+
+				//Prep new message for output	
+				buffer[0] = state[0][0];
+				buffer[1] = state[1][0];
+				buffer[2] = state[2][0];
+				buffer[3] = state[3][0];
+				buffer[4] = state[0][1];
+				buffer[5] = state[1][1];
+				buffer[6] = state[2][1];
+				buffer[7] = state[3][1];
+				buffer[8] = state[0][2];
+				buffer[9] = state[1][2];
+				buffer[10] = state[2][2];
+				buffer[11] = state[3][2];
+				buffer[12] = state[0][3];
+				buffer[13] = state[1][3];
+				buffer[14] = state[2][3];
+				buffer[15] = state[3][3];
+				outputText.write(reinterpret_cast<char*>(&buffer), 16);
+				outputText.flush();
+
+				//Do AES stuff here
+				while (inputText.read(reinterpret_cast<char*>(&buffer), 16)) {
+					//Process 64 bits of input into usable form for AES
+					state[0][0] = (unsigned char)(buffer[0]) ;
+					state[1][0] = (unsigned char)(buffer[1]) ;
+					state[2][0] = (unsigned char)(buffer[2]) ;
+					state[3][0] = (unsigned char)(buffer[3]) ;
+					state[0][1] = (unsigned char)(buffer[4]) ;
+					state[1][1] = (unsigned char)(buffer[5]) ;
+					state[2][1] = (unsigned char)(buffer[6]) ;
+					state[3][1] = (unsigned char)(buffer[7]) ;
+					state[0][2] = (unsigned char)(buffer[8]) ;
+					state[1][2] = (unsigned char)(buffer[9]) ;
+					state[2][2] = (unsigned char)(buffer[10]);
+					state[3][2] = (unsigned char)(buffer[11]);
+					state[0][3] = (unsigned char)(buffer[12]);
+					state[1][3] = (unsigned char)(buffer[13]);
+					state[2][3] = (unsigned char)(buffer[14]);
+					state[3][3] = (unsigned char)(buffer[15]);
+					aesEncrypt();								//encrypt
+
+					//prep new message for output
+					(buffer[0]) = state[0][0];
+					(buffer[1]) = state[1][0];
+					(buffer[2]) = state[2][0];
+					(buffer[3]) = state[3][0];
+					(buffer[4]) = state[0][1];
+					(buffer[5]) = state[1][1];
+					(buffer[6]) = state[2][1];
+					(buffer[7]) = state[3][1];
+					(buffer[8]) = state[0][2];
+					(buffer[9]) = state[1][2];
+					(buffer[10]) = state[2][2];
+					(buffer[11]) = state[3][2];
+					(buffer[12]) = state[0][3];
+					(buffer[13]) = state[1][3];
+					(buffer[14]) = state[2][3];
+					(buffer[15]) = state[3][3];
+					outputText.write(reinterpret_cast<char*>(&buffer), 16);
+				}
+			}
+			else if (mode == "cbc") {
+
+			}
+			//check last read to see how many bytes came
+			//pad and encrypt
+			int bytesLeft = inputText.gcount();
+			if (bytesLeft > 0)
+			{
+				stateRandom();		//fill state with padding
+				//Process remaining bits for AES
+				switch (bytesLeft) {
+				case 15: state[2][3] = (unsigned char)(buffer[14]);
+				case 14: state[1][3] = (unsigned char)(buffer[13]);
+				case 13: state[0][3] = (unsigned char)(buffer[12]);
+				case 12: state[3][2] = (unsigned char)(buffer[11]);
+				case 11: state[2][2] = (unsigned char)(buffer[10]);
+				case 10: state[1][2] = (unsigned char)(buffer[9]);
+				case 9:  state[0][2] = (unsigned char)(buffer[8]);
+				case 8:  state[3][1] = (unsigned char)(buffer[7]);
+				case 7:  state[2][1] = (unsigned char)(buffer[6]);
+				case 6:  state[1][1] = (unsigned char)(buffer[5]);
+				case 5:  state[0][1] = (unsigned char)(buffer[4]);
+				case 4:  state[3][0] = (unsigned char)(buffer[3]);
+				case 3:  state[2][0] = (unsigned char)(buffer[2]);
+				case 2:  state[1][0] = (unsigned char)(buffer[1]);
+				case 1:  state[0][0] = (unsigned char)(buffer[0]);
+				}
+				aesEncrypt();
+
+				//prep new message for output
+				(buffer[0]) = state[0][0];
+				(buffer[1]) = state[1][0];
+				(buffer[2]) = state[2][0];
+				(buffer[3]) = state[3][0];
+				(buffer[4]) = state[0][1];
+				(buffer[5]) = state[1][1];
+				(buffer[6]) = state[2][1];
+				(buffer[7]) = state[3][1];
+				(buffer[8]) = state[0][2];
+				(buffer[9]) = state[1][2];
+				(buffer[10]) = state[2][2];
+				(buffer[11]) = state[3][2];
+				(buffer[12]) = state[0][3];
+				(buffer[13]) = state[1][3];
+				(buffer[14]) = state[2][3];
+				(buffer[15]) = state[3][3];
+				outputText.write(reinterpret_cast<char*>(&buffer), 16);
+			}
+		}
+		else {	//decrypt
+			//read in first 16 bytes, decrypt
+			inputText.read(reinterpret_cast<char*>(&buffer), 16);
+			state[0][0] = (unsigned char)(buffer[0]);
+			state[1][0] = (unsigned char)(buffer[1]);
+			state[2][0] = (unsigned char)(buffer[2]);
+			state[3][0] = (unsigned char)(buffer[3]);
+			state[0][1] = (unsigned char)(buffer[4]);
+			state[1][1] = (unsigned char)(buffer[5]);
+			state[2][1] = (unsigned char)(buffer[6]);
+			state[3][1] = (unsigned char)(buffer[7]);
+			state[0][2] = (unsigned char)(buffer[8]);
+			state[1][2] = (unsigned char)(buffer[9]);
+			state[2][2] = (unsigned char)(buffer[10]);
+			state[3][2] = (unsigned char)(buffer[11]);
+			state[0][3] = (unsigned char)(buffer[12]);
+			state[1][3] = (unsigned char)(buffer[13]);
+			state[2][3] = (unsigned char)(buffer[14]);
+			state[3][3] = (unsigned char)(buffer[15]);
+			if (mode == "ecb") {
+				aesDecrypt();
+				fileLength =  (unsigned int)state[0][3] << 24 | ((unsigned int)state[1][3] << 16) & 0x0FF 
+								|((unsigned int)state[2][3] << 8) & 0x0FF |((unsigned int)state[3][3]) & 0x0FF;
+				bool isNotLastBlock = true;
+				unsigned long long count = 0;
+				while (inputText.read(reinterpret_cast<char*>(&buffer), 16)) {
+					//Process 64 bits of input into usable form for AES
+					state[0][0] = (unsigned char)(buffer[0]);
+					state[1][0] = (unsigned char)(buffer[1]);
+					state[2][0] = (unsigned char)(buffer[2]);
+					state[3][0] = (unsigned char)(buffer[3]);
+					state[0][1] = (unsigned char)(buffer[4]);
+					state[1][1] = (unsigned char)(buffer[5]);
+					state[2][1] = (unsigned char)(buffer[6]);
+					state[3][1] = (unsigned char)(buffer[7]);
+					state[0][2] = (unsigned char)(buffer[8]);
+					state[1][2] = (unsigned char)(buffer[9]);
+					state[2][2] = (unsigned char)(buffer[10]);
+					state[3][2] = (unsigned char)(buffer[11]);
+					state[0][3] = (unsigned char)(buffer[12]);
+					state[1][3] = (unsigned char)(buffer[13]);
+					state[2][3] = (unsigned char)(buffer[14]);
+					state[3][3] = (unsigned char)(buffer[15]);
+					aesDecrypt();
+
+					//prep new message for output
+					(buffer[0]) = state[0][0];
+					(buffer[1]) = state[1][0];
+					(buffer[2]) = state[2][0];
+					(buffer[3]) = state[3][0];
+					(buffer[4]) = state[0][1];
+					(buffer[5]) = state[1][1];
+					(buffer[6]) = state[2][1];
+					(buffer[7]) = state[3][1];
+					(buffer[8]) = state[0][2];
+					(buffer[9]) = state[1][2];
+					(buffer[10]) = state[2][2];
+					(buffer[11]) = state[3][2];
+					(buffer[12]) = state[0][3];
+					(buffer[13]) = state[1][3];
+					(buffer[14]) = state[2][3];
+					(buffer[15]) = state[3][3];
+
+					count += 16;
+					isNotLastBlock = count <= fileLength;
+					if (isNotLastBlock)
+						outputText.write(reinterpret_cast<char*>(&buffer), 16);
+					else
+						outputText.write(reinterpret_cast<char*>(&buffer), fileLength % 16);
+				}
+			}
+			else if (mode == "cbc") {
+
+			}
+		}
+	}
+	catch (exception e)
+	{
+		cerr << e.what() << endl;
+		exit(1);
+	}
 }
