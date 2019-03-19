@@ -301,49 +301,92 @@ void fourteenRoundKeys(unsigned int keyWords[]) {
 
 void generateKeys(string keyString, int rounds) 
 {
-	//parse key string into hex values
-	int keyLength = keyString.length();
-	unsigned char hex0, hex1, hex2, hex3, hex4, hex5, hex6, hex7 = 0;
-	unsigned int keyWords[maxWordsKey] = { 0 };
-	int i = 0;
-	int index = 0;
-	while (i < keyLength) {
-		//grab 4 bytes to make a word
-		hex0 = charHexValue(keyString[i]);
-		hex1 = charHexValue(keyString[++i]);
-		hex2 = charHexValue(keyString[++i]);
-		hex3 = charHexValue(keyString[++i]);
-		hex4 = charHexValue(keyString[++i]);
-		hex5 = charHexValue(keyString[++i]);
-		hex6 = charHexValue(keyString[++i]);
-		hex7 = charHexValue(keyString[++i]);
-		i++;
-		keyWords[index++] = hex0 << 28 | hex1 << 24 | hex2 << 20 
-						| hex3 << 16 | hex4 << 12 | hex5 << 8 
-						| hex6 << 4 | hex7;
+	//check the key for the right length first
+	int length = keyString.length();
+	if (length != 32 && length != 18 && length != 26 && length != 48 && length != 34 && length !=64) {
+		cerr << "Error: Bad Input. Specify a 32, 48, or 64 digit hex value or a 16, 24, or 32 character string surrounded by single quotes for the key.";
+		exit(1);
 	}
+	unsigned int keyWords[maxWordsKey] = { 0 };
+	unsigned int index = 0;
+	if (rounds == 14) index = 7;
+	else if (rounds == 12) index = 5;
+	else index = 3;
+	if (keyString[0] == '\'' & keyString[length - 1] == '\'')	//interpret as chars
+	{
+		key[0][0][0] = keyString[0];
+		key[0][1][0] =	keyString[1];
+		key[0][2][0] =	keyString[2];
+		key[0][3][0] =	keyString[3];
+		//column 1		
+		key[0][0][1] =	keyString[4];
+		key[0][1][1] =	keyString[5];
+		key[0][2][1] =	keyString[6];
+		key[0][3][1] =	keyString[7];
+		//column 2		
+		key[0][0][2] =	keyString[8];
+		key[0][1][2] =	keyString[9];
+		key[0][2][2] =	keyString[10];
+		key[0][3][2] =	keyString[11];
+		//column 3		
+		key[0][0][3] =	keyString[12];
+		key[0][1][3] =	keyString[13];
+		key[0][2][3] =	keyString[14];
+		key[0][3][3] =	keyString[15];
 
-	//store k0
-	//column 0
-	key[0][0][0] = (keyWords[0] >> 24) & 0x0FF;
-	key[0][1][0] = (keyWords[0] >> 16) & 0x0FF;
-	key[0][2][0] = (keyWords[0] >> 8)  & 0x0FF;
-	key[0][3][0] = (keyWords[0] >> 0)  & 0x0FF;
-	//column 1
-	key[0][0][1] = (keyWords[1] >> 24) & 0x0FF;
-	key[0][1][1] = (keyWords[1] >> 16) & 0x0FF;
-	key[0][2][1] = (keyWords[1] >> 8) & 0x0FF;
-	key[0][3][1] = (keyWords[1] >> 0) & 0x0FF;
-	//column 2
-	key[0][0][2] = (keyWords[2] >> 24) & 0x0FF;
-	key[0][1][2] = (keyWords[2] >> 16) & 0x0FF;
-	key[0][2][2] = (keyWords[2] >> 8) & 0x0FF;
-	key[0][3][2] = (keyWords[2] >> 0) & 0x0FF;
-	//column 3
-	key[0][0][3] = (keyWords[3] >> 24) & 0x0FF;
-	key[0][1][3] = (keyWords[3] >> 16) & 0x0FF;
-	key[0][2][3] = (keyWords[3] >> 8) & 0x0FF;
-	key[0][3][3] = (keyWords[3] >> 0) & 0x0FF;
+		//put inputted key into form for use to generate other keys
+		//only need to do for rounds not stored in key[][][]
+		switch (rounds) {
+		case (14):	//32 bytes or 8 words
+			keyWords[index--] = keyString[31] | keyString[30] << 8 | keyString[29] << 16 | keyString[28] << 24;
+			keyWords[index--] = keyString[27] | keyString[26] << 8 | keyString[25] << 16 | keyString[24] << 24;
+		case (12):	//24 bytes or 6 words						 					  
+			keyWords[index--] = keyString[23] | keyString[22] << 8 | keyString[21] << 16 | keyString[20] << 24;
+			keyWords[index--] = keyString[19] | keyString[18] << 8 | keyString[17] << 16 | keyString[16] << 24;
+		}
+	}
+	else {
+		//Store k0
+		key[0][0][0] = (charHexValue(keyString[0]) << 4) | charHexValue(keyString[1]);
+		key[0][1][0] = (charHexValue(keyString[2]) << 4) | charHexValue(keyString[3]);
+		key[0][2][0] = (charHexValue(keyString[4]) << 4) | charHexValue(keyString[5]);
+		key[0][3][0] = (charHexValue(keyString[6]) << 4) | charHexValue(keyString[7]);
+		key[0][0][1] = (charHexValue(keyString[8]) << 4) | charHexValue(keyString[9]);
+		key[0][1][1] = (charHexValue(keyString[10]) << 4) | charHexValue(keyString[11]);
+		key[0][2][1] = (charHexValue(keyString[12]) << 4) | charHexValue(keyString[13]);
+		key[0][3][1] = (charHexValue(keyString[14]) << 4) | charHexValue(keyString[15]);
+		key[0][0][2] = (charHexValue(keyString[16]) << 4) | charHexValue(keyString[17]);
+		key[0][1][2] = (charHexValue(keyString[18]) << 4) | charHexValue(keyString[19]);
+		key[0][2][2] = (charHexValue(keyString[20]) << 4) | charHexValue(keyString[21]);
+		key[0][3][2] = (charHexValue(keyString[22]) << 4) | charHexValue(keyString[23]);
+		key[0][0][3] = (charHexValue(keyString[24]) << 4) | charHexValue(keyString[25]);
+		key[0][1][3] = (charHexValue(keyString[26]) << 4) | charHexValue(keyString[27]);
+		key[0][2][3] = (charHexValue(keyString[28]) << 4) | charHexValue(keyString[29]);
+		key[0][3][3] = (charHexValue(keyString[30]) << 4) | charHexValue(keyString[31]);
+
+		//put inputted key into form for use to generate other keys
+		//only need to do for rounds not stored in key[][][]
+		switch (rounds) {
+		case (14):	//32 bytes or 8 words
+			keyWords[index--] = charHexValue(keyString[63]) | charHexValue(keyString[62]) << 4 | charHexValue(keyString[61]) << 8 | charHexValue(keyString[60]) << 12
+								| charHexValue(keyString[59]) << 16 | charHexValue(keyString[58]) << 20 | charHexValue(keyString[57]) << 24 | charHexValue(keyString[56]) << 28;
+			keyWords[index--] = charHexValue(keyString[55]) | charHexValue(keyString[54]) << 4 | charHexValue(keyString[53]) << 8 | charHexValue(keyString[52]) << 12
+								| charHexValue(keyString[51]) << 16 | charHexValue(keyString[50]) << 20 | charHexValue(keyString[49]) << 24 | charHexValue(keyString[48]) << 28;
+		case (12):	//24 bytes or 6 words
+			keyWords[index--] = charHexValue(keyString[47]) | charHexValue(keyString[46]) << 4 | charHexValue(keyString[45]) << 8 | charHexValue(keyString[44]) << 12
+								| charHexValue(keyString[43]) << 16 | charHexValue(keyString[42]) << 20 | charHexValue(keyString[41]) << 24 | charHexValue(keyString[40]) << 28;
+			keyWords[index--] = charHexValue(keyString[39]) | charHexValue(keyString[38]) << 4 | charHexValue(keyString[37]) << 8 | charHexValue(keyString[36]) << 12
+								| charHexValue(keyString[35]) << 16 | charHexValue(keyString[34]) << 20 | charHexValue(keyString[33]) << 24 | charHexValue(keyString[28]);
+		}
+	}
+	
+	//store w0 through w4 into keyWords array for us with generating other round keys
+	//(if rounds > 10 other words got stored in keyWords in the above if/else conditional
+	//to handle based on whether inputted key was string or hex based
+	keyWords[index--] = key[0][3][3] | key[0][2][3] << 8 | key[0][1][3] << 16 | key[0][0][3] << 24;
+	keyWords[index--] = key[0][3][2] | key[0][2][2] << 8 | key[0][1][2] << 16 | key[0][0][2] << 24;
+	keyWords[index--] = key[0][3][1] | key[0][2][1] << 8 | key[0][1][1] << 16 | key[0][0][1] << 24;
+	keyWords[index--] = key[0][3][0] | key[0][2][0] << 8 | key[0][1][0] << 16 | key[0][0][0] << 24;
 
 	//Generate other round keys
 	switch (rounds) {
@@ -682,13 +725,15 @@ int main(int argc, char * argv[])
 
 		if (isEncrypt)
 		{
+			unsigned char xorVector[4][4] = { 0 };
+
 			//get length of file, pad on left, encrypt, and write to file
 			inputText.seekg(0, inputText.end);
 			fileLength = inputText.tellg();
 			inputText.seekg(0, inputText.beg);
 
 			srand(start);
-		
+
 			if (mode == "ecb") {
 				stateRandom();				//puts garbage in the state
 				//put file length in the last 32 bits
@@ -716,21 +761,20 @@ int main(int argc, char * argv[])
 				buffer[14] = state[2][3];
 				buffer[15] = state[3][3];
 				outputText.write(reinterpret_cast<char*>(&buffer), 16);
-				outputText.flush();
 
 				//Do AES stuff here
 				while (inputText.read(reinterpret_cast<char*>(&buffer), 16)) {
 					//Process 64 bits of input into usable form for AES
-					state[0][0] = (unsigned char)(buffer[0]) ;
-					state[1][0] = (unsigned char)(buffer[1]) ;
-					state[2][0] = (unsigned char)(buffer[2]) ;
-					state[3][0] = (unsigned char)(buffer[3]) ;
-					state[0][1] = (unsigned char)(buffer[4]) ;
-					state[1][1] = (unsigned char)(buffer[5]) ;
-					state[2][1] = (unsigned char)(buffer[6]) ;
-					state[3][1] = (unsigned char)(buffer[7]) ;
-					state[0][2] = (unsigned char)(buffer[8]) ;
-					state[1][2] = (unsigned char)(buffer[9]) ;
+					state[0][0] = (unsigned char)(buffer[0]);
+					state[1][0] = (unsigned char)(buffer[1]);
+					state[2][0] = (unsigned char)(buffer[2]);
+					state[3][0] = (unsigned char)(buffer[3]);
+					state[0][1] = (unsigned char)(buffer[4]);
+					state[1][1] = (unsigned char)(buffer[5]);
+					state[2][1] = (unsigned char)(buffer[6]);
+					state[3][1] = (unsigned char)(buffer[7]);
+					state[0][2] = (unsigned char)(buffer[8]);
+					state[1][2] = (unsigned char)(buffer[9]);
 					state[2][2] = (unsigned char)(buffer[10]);
 					state[3][2] = (unsigned char)(buffer[11]);
 					state[0][3] = (unsigned char)(buffer[12]);
@@ -760,7 +804,186 @@ int main(int argc, char * argv[])
 				}
 			}
 			else if (mode == "cbc") {
+				//initialization vector
+				stateRandom();
+				xorVector[0][0] = state[0][0];
+				xorVector[1][0] = state[1][0];
+				xorVector[2][0] = state[2][0];
+				xorVector[3][0] = state[3][0];
+				xorVector[0][1] = state[0][1];
+				xorVector[1][1] = state[1][1];
+				xorVector[2][1] = state[2][1];
+				xorVector[3][1] = state[3][1];
+				xorVector[0][2] = state[0][2];
+				xorVector[1][2] = state[1][2];
+				xorVector[2][2] = state[2][2];
+				xorVector[3][2] = state[3][2];
+				xorVector[0][3] = state[0][3];
+				xorVector[1][3] = state[1][3];
+				xorVector[2][3] = state[2][3];
+				xorVector[3][3] = state[3][3];
 
+				//encrypt and write out IV
+				aesEncrypt();
+				//Prep new message for output	
+				buffer[0] = state[0][0];
+				buffer[1] = state[1][0];
+				buffer[2] = state[2][0];
+				buffer[3] = state[3][0];
+				buffer[4] = state[0][1];
+				buffer[5] = state[1][1];
+				buffer[6] = state[2][1];
+				buffer[7] = state[3][1];
+				buffer[8] = state[0][2];
+				buffer[9] = state[1][2];
+				buffer[10] = state[2][2];
+				buffer[11] = state[3][2];
+				buffer[12] = state[0][3];
+				buffer[13] = state[1][3];
+				buffer[14] = state[2][3];
+				buffer[15] = state[3][3];
+				outputText.write(reinterpret_cast<char*>(&buffer), 16);
+
+				//write out file Length
+				stateRandom();				//puts garbage in the state
+				//put file length in the last 32 bits
+				state[0][3] = fileLength >> 24;
+				state[1][3] = (fileLength >> 16) & 0x0FF;
+				state[2][3] = (fileLength >> 8) & 0x0FF;
+				state[3][3] = (fileLength) & 0x0FF;
+
+				//xor with IV
+				state[0][0] ^= xorVector[0][0];
+				state[1][0] ^= xorVector[1][0];
+				state[2][0] ^= xorVector[2][0];
+				state[3][0] ^= xorVector[3][0];
+				state[0][1] ^= xorVector[0][1];
+				state[1][1] ^= xorVector[1][1];
+				state[2][1] ^= xorVector[2][1];
+				state[3][1] ^= xorVector[3][1];
+				state[0][2] ^= xorVector[0][2];
+				state[1][2] ^= xorVector[1][2];
+				state[2][2] ^= xorVector[2][2];
+				state[3][2] ^= xorVector[3][2];
+				state[0][3] ^= xorVector[0][3];
+				state[1][3] ^= xorVector[1][3];
+				state[2][3] ^= xorVector[2][3];
+				state[3][3] ^= xorVector[3][3];
+				aesEncrypt();				//encrypt the fileLength 
+
+				//Prep new message for output	
+				buffer[0] = state[0][0];
+				buffer[1] = state[1][0];
+				buffer[2] = state[2][0];
+				buffer[3] = state[3][0];
+				buffer[4] = state[0][1];
+				buffer[5] = state[1][1];
+				buffer[6] = state[2][1];
+				buffer[7] = state[3][1];
+				buffer[8] = state[0][2];
+				buffer[9] = state[1][2];
+				buffer[10] = state[2][2];
+				buffer[11] = state[3][2];
+				buffer[12] = state[0][3];
+				buffer[13] = state[1][3];
+				buffer[14] = state[2][3];
+				buffer[15] = state[3][3];
+				outputText.write(reinterpret_cast<char*>(&buffer), 16);
+
+				//store as new xorVector
+				xorVector[0][0] = state[0][0];
+				xorVector[1][0] = state[1][0];
+				xorVector[2][0] = state[2][0];
+				xorVector[3][0] = state[3][0];
+				xorVector[0][1] = state[0][1];
+				xorVector[1][1] = state[1][1];
+				xorVector[2][1] = state[2][1];
+				xorVector[3][1] = state[3][1];
+				xorVector[0][2] = state[0][2];
+				xorVector[1][2] = state[1][2];
+				xorVector[2][2] = state[2][2];
+				xorVector[3][2] = state[3][2];
+				xorVector[0][3] = state[0][3];
+				xorVector[1][3] = state[1][3];
+				xorVector[2][3] = state[2][3];
+				xorVector[3][3] = state[3][3];
+
+				//Do AES stuff here
+				while (inputText.read(reinterpret_cast<char*>(&buffer), 16)) {
+					//Process 64 bits of input into usable form for AES
+					state[0][0] = (unsigned char)(buffer[0]);
+					state[1][0] = (unsigned char)(buffer[1]);
+					state[2][0] = (unsigned char)(buffer[2]);
+					state[3][0] = (unsigned char)(buffer[3]);
+					state[0][1] = (unsigned char)(buffer[4]);
+					state[1][1] = (unsigned char)(buffer[5]);
+					state[2][1] = (unsigned char)(buffer[6]);
+					state[3][1] = (unsigned char)(buffer[7]);
+					state[0][2] = (unsigned char)(buffer[8]);
+					state[1][2] = (unsigned char)(buffer[9]);
+					state[2][2] = (unsigned char)(buffer[10]);
+					state[3][2] = (unsigned char)(buffer[11]);
+					state[0][3] = (unsigned char)(buffer[12]);
+					state[1][3] = (unsigned char)(buffer[13]);
+					state[2][3] = (unsigned char)(buffer[14]);
+					state[3][3] = (unsigned char)(buffer[15]);
+
+					//xor with last encrypted message
+					state[0][0] ^= xorVector[0][0];
+					state[1][0] ^= xorVector[1][0];
+					state[2][0] ^= xorVector[2][0];
+					state[3][0] ^= xorVector[3][0];
+					state[0][1] ^= xorVector[0][1];
+					state[1][1] ^= xorVector[1][1];
+					state[2][1] ^= xorVector[2][1];
+					state[3][1] ^= xorVector[3][1];
+					state[0][2] ^= xorVector[0][2];
+					state[1][2] ^= xorVector[1][2];
+					state[2][2] ^= xorVector[2][2];
+					state[3][2] ^= xorVector[3][2];
+					state[0][3] ^= xorVector[0][3];
+					state[1][3] ^= xorVector[1][3];
+					state[2][3] ^= xorVector[2][3];
+					state[3][3] ^= xorVector[3][3];
+					aesEncrypt();								//encrypt
+
+					//prep new message for output
+					(buffer[0]) = state[0][0];
+					(buffer[1]) = state[1][0];
+					(buffer[2]) = state[2][0];
+					(buffer[3]) = state[3][0];
+					(buffer[4]) = state[0][1];
+					(buffer[5]) = state[1][1];
+					(buffer[6]) = state[2][1];
+					(buffer[7]) = state[3][1];
+					(buffer[8]) = state[0][2];
+					(buffer[9]) = state[1][2];
+					(buffer[10]) = state[2][2];
+					(buffer[11]) = state[3][2];
+					(buffer[12]) = state[0][3];
+					(buffer[13]) = state[1][3];
+					(buffer[14]) = state[2][3];
+					(buffer[15]) = state[3][3];
+					outputText.write(reinterpret_cast<char*>(&buffer), 16);
+
+					//store as new xorVector
+					xorVector[0][0] = state[0][0];
+					xorVector[1][0] = state[1][0];
+					xorVector[2][0] = state[2][0];
+					xorVector[3][0] = state[3][0];
+					xorVector[0][1] = state[0][1];
+					xorVector[1][1] = state[1][1];
+					xorVector[2][1] = state[2][1];
+					xorVector[3][1] = state[3][1];
+					xorVector[0][2] = state[0][2];
+					xorVector[1][2] = state[1][2];
+					xorVector[2][2] = state[2][2];
+					xorVector[3][2] = state[3][2];
+					xorVector[0][3] = state[0][3];
+					xorVector[1][3] = state[1][3];
+					xorVector[2][3] = state[2][3];
+					xorVector[3][3] = state[3][3];
+				}
 			}
 			//check last read to see how many bytes came
 			//pad and encrypt
@@ -786,6 +1009,25 @@ int main(int argc, char * argv[])
 				case 2:  state[1][0] = (unsigned char)(buffer[1]);
 				case 1:  state[0][0] = (unsigned char)(buffer[0]);
 				}
+				if (mode == "cbc") {
+					//xor with last encrypted message
+					state[0][0] ^= xorVector[0][0];
+					state[1][0] ^= xorVector[1][0];
+					state[2][0] ^= xorVector[2][0];
+					state[3][0] ^= xorVector[3][0];
+					state[0][1] ^= xorVector[0][1];
+					state[1][1] ^= xorVector[1][1];
+					state[2][1] ^= xorVector[2][1];
+					state[3][1] ^= xorVector[3][1];
+					state[0][2] ^= xorVector[0][2];
+					state[1][2] ^= xorVector[1][2];
+					state[2][2] ^= xorVector[2][2];
+					state[3][2] ^= xorVector[3][2];
+					state[0][3] ^= xorVector[0][3];
+					state[1][3] ^= xorVector[1][3];
+					state[2][3] ^= xorVector[2][3];
+					state[3][3] ^= xorVector[3][3];
+				}
 				aesEncrypt();
 
 				//prep new message for output
@@ -808,7 +1050,8 @@ int main(int argc, char * argv[])
 				outputText.write(reinterpret_cast<char*>(&buffer), 16);
 			}
 		}
-		else {	//decrypt
+		//decrypt
+		else {	
 			//read in first 16 bytes, decrypt
 			inputText.read(reinterpret_cast<char*>(&buffer), 16);
 			state[0][0] = (unsigned char)(buffer[0]);
@@ -827,12 +1070,15 @@ int main(int argc, char * argv[])
 			state[1][3] = (unsigned char)(buffer[13]);
 			state[2][3] = (unsigned char)(buffer[14]);
 			state[3][3] = (unsigned char)(buffer[15]);
+			aesDecrypt();
+
+			bool isNotLastBlock = true;
+			unsigned long long count = 0;
+
 			if (mode == "ecb") {
-				aesDecrypt();
 				fileLength =  (unsigned int)state[0][3] << 24 | ((unsigned int)state[1][3] << 16) & 0x0FF 
 								|((unsigned int)state[2][3] << 8) & 0x0FF |((unsigned int)state[3][3]) & 0x0FF;
-				bool isNotLastBlock = true;
-				unsigned long long count = 0;
+				
 				while (inputText.read(reinterpret_cast<char*>(&buffer), 16)) {
 					//Process 64 bits of input into usable form for AES
 					state[0][0] = (unsigned char)(buffer[0]);
@@ -880,7 +1126,166 @@ int main(int argc, char * argv[])
 				}
 			}
 			else if (mode == "cbc") {
+				//get the IV
+				unsigned char xorVector[4][4] = { 0 };
+				xorVector[0][0] = state[0][0];
+				xorVector[1][0] = state[1][0];
+				xorVector[2][0] = state[2][0];
+				xorVector[3][0] = state[3][0];
+				xorVector[0][1] = state[0][1];
+				xorVector[1][1] = state[1][1];
+				xorVector[2][1] = state[2][1];
+				xorVector[3][1] = state[3][1];
+				xorVector[0][2] = state[0][2];
+				xorVector[1][2] = state[1][2];
+				xorVector[2][2] = state[2][2];
+				xorVector[3][2] = state[3][2];
+				xorVector[0][3] = state[0][3];
+				xorVector[1][3] = state[1][3];
+				xorVector[2][3] = state[2][3];
+				xorVector[3][3] = state[3][3];
 
+				//get file Length
+				inputText.read(reinterpret_cast<char*>(&buffer), 16);
+				state[0][0] = (unsigned char)(buffer[0]);
+				state[1][0] = (unsigned char)(buffer[1]);
+				state[2][0] = (unsigned char)(buffer[2]);
+				state[3][0] = (unsigned char)(buffer[3]);
+				state[0][1] = (unsigned char)(buffer[4]);
+				state[1][1] = (unsigned char)(buffer[5]);
+				state[2][1] = (unsigned char)(buffer[6]);
+				state[3][1] = (unsigned char)(buffer[7]);
+				state[0][2] = (unsigned char)(buffer[8]);
+				state[1][2] = (unsigned char)(buffer[9]);
+				state[2][2] = (unsigned char)(buffer[10]);
+				state[3][2] = (unsigned char)(buffer[11]);
+				state[0][3] = (unsigned char)(buffer[12]);
+				state[1][3] = (unsigned char)(buffer[13]);
+				state[2][3] = (unsigned char)(buffer[14]);
+				state[3][3] = (unsigned char)(buffer[15]);
+				aesDecrypt();
+
+				//xor with IV
+				state[0][0] ^= xorVector[0][0];
+				state[1][0] ^= xorVector[1][0];
+				state[2][0] ^= xorVector[2][0];
+				state[3][0] ^= xorVector[3][0];
+				state[0][1] ^= xorVector[0][1];
+				state[1][1] ^= xorVector[1][1];
+				state[2][1] ^= xorVector[2][1];
+				state[3][1] ^= xorVector[3][1];
+				state[0][2] ^= xorVector[0][2];
+				state[1][2] ^= xorVector[1][2];
+				state[2][2] ^= xorVector[2][2];
+				state[3][2] ^= xorVector[3][2];
+				state[0][3] ^= xorVector[0][3];
+				state[1][3] ^= xorVector[1][3];
+				state[2][3] ^= xorVector[2][3];
+				state[3][3] ^= xorVector[3][3];
+
+				fileLength = (unsigned int)state[0][3] << 24 | ((unsigned int)state[1][3] << 16) & 0x0FF
+					| ((unsigned int)state[2][3] << 8) & 0x0FF | ((unsigned int)state[3][3]) & 0x0FF;
+
+				//store new xorVector
+				xorVector[0][0] = (unsigned char)(buffer[0]);
+				xorVector[1][0] = (unsigned char)(buffer[1]);
+				xorVector[2][0] = (unsigned char)(buffer[2]);
+				xorVector[3][0] = (unsigned char)(buffer[3]);
+				xorVector[0][1] = (unsigned char)(buffer[4]);
+				xorVector[1][1] = (unsigned char)(buffer[5]);
+				xorVector[2][1] = (unsigned char)(buffer[6]);
+				xorVector[3][1] = (unsigned char)(buffer[7]);
+				xorVector[0][2] = (unsigned char)(buffer[8]);
+				xorVector[1][2] = (unsigned char)(buffer[9]);
+				xorVector[2][2] = (unsigned char)(buffer[10]);
+				xorVector[3][2] = (unsigned char)(buffer[11]);
+				xorVector[0][3] = (unsigned char)(buffer[12]);
+				xorVector[1][3] = (unsigned char)(buffer[13]);
+				xorVector[2][3] = (unsigned char)(buffer[14]);
+				xorVector[3][3] = (unsigned char)(buffer[15]);
+
+				//Do AES stuff here
+				while (inputText.read(reinterpret_cast<char*>(&buffer), 16)) {
+					//Process 64 bits of input into usable form for AES
+					state[0][0] = (unsigned char)(buffer[0]);
+					state[1][0] = (unsigned char)(buffer[1]);
+					state[2][0] = (unsigned char)(buffer[2]);
+					state[3][0] = (unsigned char)(buffer[3]);
+					state[0][1] = (unsigned char)(buffer[4]);
+					state[1][1] = (unsigned char)(buffer[5]);
+					state[2][1] = (unsigned char)(buffer[6]);
+					state[3][1] = (unsigned char)(buffer[7]);
+					state[0][2] = (unsigned char)(buffer[8]);
+					state[1][2] = (unsigned char)(buffer[9]);
+					state[2][2] = (unsigned char)(buffer[10]);
+					state[3][2] = (unsigned char)(buffer[11]);
+					state[0][3] = (unsigned char)(buffer[12]);
+					state[1][3] = (unsigned char)(buffer[13]);
+					state[2][3] = (unsigned char)(buffer[14]);
+					state[3][3] = (unsigned char)(buffer[15]);
+					aesDecrypt();
+
+					//xor with IV
+					state[0][0] ^= xorVector[0][0];
+					state[1][0] ^= xorVector[1][0];
+					state[2][0] ^= xorVector[2][0];
+					state[3][0] ^= xorVector[3][0];
+					state[0][1] ^= xorVector[0][1];
+					state[1][1] ^= xorVector[1][1];
+					state[2][1] ^= xorVector[2][1];
+					state[3][1] ^= xorVector[3][1];
+					state[0][2] ^= xorVector[0][2];
+					state[1][2] ^= xorVector[1][2];
+					state[2][2] ^= xorVector[2][2];
+					state[3][2] ^= xorVector[3][2];
+					state[0][3] ^= xorVector[0][3];
+					state[1][3] ^= xorVector[1][3];
+					state[2][3] ^= xorVector[2][3];
+					state[3][3] ^= xorVector[3][3];
+
+					//store new xorVector
+					xorVector[0][0] = (unsigned char)(buffer[0]);
+					xorVector[1][0] = (unsigned char)(buffer[1]);
+					xorVector[2][0] = (unsigned char)(buffer[2]);
+					xorVector[3][0] = (unsigned char)(buffer[3]);
+					xorVector[0][1] = (unsigned char)(buffer[4]);
+					xorVector[1][1] = (unsigned char)(buffer[5]);
+					xorVector[2][1] = (unsigned char)(buffer[6]);
+					xorVector[3][1] = (unsigned char)(buffer[7]);
+					xorVector[0][2] = (unsigned char)(buffer[8]);
+					xorVector[1][2] = (unsigned char)(buffer[9]);
+					xorVector[2][2] = (unsigned char)(buffer[10]);
+					xorVector[3][2] = (unsigned char)(buffer[11]);
+					xorVector[0][3] = (unsigned char)(buffer[12]);
+					xorVector[1][3] = (unsigned char)(buffer[13]);
+					xorVector[2][3] = (unsigned char)(buffer[14]);
+					xorVector[3][3] = (unsigned char)(buffer[15]);
+
+					//prep new message for output
+					(buffer[0]) = state[0][0];
+					(buffer[1]) = state[1][0];
+					(buffer[2]) = state[2][0];
+					(buffer[3]) = state[3][0];
+					(buffer[4]) = state[0][1];
+					(buffer[5]) = state[1][1];
+					(buffer[6]) = state[2][1];
+					(buffer[7]) = state[3][1];
+					(buffer[8]) = state[0][2];
+					(buffer[9]) = state[1][2];
+					(buffer[10]) = state[2][2];
+					(buffer[11]) = state[3][2];
+					(buffer[12]) = state[0][3];
+					(buffer[13]) = state[1][3];
+					(buffer[14]) = state[2][3];
+					(buffer[15]) = state[3][3];
+
+					count += 16;
+					isNotLastBlock = count <= fileLength;
+					if (isNotLastBlock)
+						outputText.write(reinterpret_cast<char*>(&buffer), 16);
+					else
+						outputText.write(reinterpret_cast<char*>(&buffer), fileLength % 16);
+				}
 			}
 		}
 	}
@@ -889,4 +1294,7 @@ int main(int argc, char * argv[])
 		cerr << e.what() << endl;
 		exit(1);
 	}
-}
+
+	clock_t runtime = clock() - start;
+	cout << runtime / 1000 << "." << runtime % 1000 << " s" << endl;
+}//close main

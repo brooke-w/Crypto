@@ -1,5 +1,6 @@
 ﻿  AES.cpp
-c:\users\brooke weborg\documents\github\crypto\aes\aes\aes.cpp(654): warning C4018: '<': signed/unsigned mismatch
-c:\users\brooke weborg\documents\github\crypto\aes\aes\aes.cpp(687): warning C4244: '=': conversion from 'std::streamoff' to 'unsigned int', possible loss of data
-c:\users\brooke weborg\documents\github\crypto\aes\aes\aes.cpp(767): warning C4244: 'initializing': conversion from 'std::streamsize' to 'int', possible loss of data
+c:\users\brooke weborg\documents\github\crypto\aes\aes\aes.cpp(315): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
+c:\users\brooke weborg\documents\github\crypto\aes\aes\aes.cpp(697): warning C4018: '<': signed/unsigned mismatch
+c:\users\brooke weborg\documents\github\crypto\aes\aes\aes.cpp(732): warning C4244: '=': conversion from 'std::streamoff' to 'unsigned int', possible loss of data
+c:\users\brooke weborg\documents\github\crypto\aes\aes\aes.cpp(990): warning C4244: 'initializing': conversion from 'std::streamsize' to 'int', possible loss of data
   AES.vcxproj -> C:\Users\Brooke Weborg\Documents\GitHub\crypto\AES\Debug\AES.exe
