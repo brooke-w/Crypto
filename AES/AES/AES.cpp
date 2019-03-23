@@ -18,8 +18,7 @@ And perform the AES encryption/decryption on a given file.
 using namespace std;
 
 //Globals
-unsigned int roundKeys[56];	//40 for 10 rounds, 48 for 12 rounds, 56 for 14 rounds
-unsigned char state[4][4] = { 0 };	//holds the current state of the message to be encrypted/decrypted
+unsigned char state[4][4] = {0} ;	//holds the current state of the message to be encrypted/decrypted
 //all the substitutions for subBytes function
 unsigned char subBytesSubs[16][16] = { {0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76},
 										{0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0},
@@ -111,10 +110,8 @@ const unsigned char gfMult9[256] = { 0x00, 0x09, 0x12, 0x1B, 0x24, 0x2D, 0x36, 0
 const int maxRounds = 14;						//highest possible number of rounds
 const int maxWordsKey = 8;						//maximum words for the key
 //holds all of the round constants for generating each key
-const unsigned int roundConstants[maxRounds+1] = {0, 0x01 << 24, 0x02 << 24, 0x04 << 24, 0x08 << 24, 
-													0x10 << 24, 0x20 << 24, 0x40 << 24, 0x80 << 24, 
-													0x1B << 24, 0x36 << 24};
-unsigned char key[maxRounds][4][4] = { 0 };		//holds all the keys for each round
+const unsigned int roundConstants[maxRounds+1] = {0, 0x01 << 24, 0x02 << 24, 0x04 << 24, 0x08 << 24, 0x10 << 24, 0x20 << 24, 0x40 << 24, 0x80 << 24, 0x1B << 24, 0x36 << 24};
+unsigned char key[maxRounds+1][4][4] = { 0 };			//holds all the keys for each round
 int rounds = 10;								//holds the amount of rounds we'll be processing the message for
 
 /*Precondition: Takes a character representing a hex value
@@ -329,7 +326,7 @@ void generateKeys(string keyString, int rounds)
 	if (rounds == 14) index = 7;				//index initialization depends on the number of rounds
 	else if (rounds == 12) index = 5;
 	else index = 3;
-	if (keyString[0] == '\'' & keyString[length - 1] == '\'')	//interpret as chars
+	if (keyString[0] == '\'' && keyString[length - 1] == '\'')	//interpret as chars
 	{	//put each char into k0 until it's full
 		key[0][0][0] = keyString[1];			//start at 1 not 0 - '\' is at 0
 		key[0][1][0] =	keyString[2];
@@ -735,9 +732,9 @@ int main(int argc, char * argv[])
 	//get the key
 	string keyString = argv[2];
 	rounds = keyString.length();
-	if (rounds == 32 | rounds == 18) rounds = 10;		//if key is either 32 hex digits or 18 characters rounds == 10
-	else if (rounds == 48 | rounds == 26) rounds = 12;	//if key is either 48 hex digits or 26 characters rounds == 12
-	else if (rounds == 64 | rounds == 34) rounds = 14;	//if key is either 64 hex digits or 34 characters rounds == 14
+	if (rounds == 32 || rounds == 18) rounds = 10;		//if key is either 32 hex digits or 18 characters rounds == 10
+	else if (rounds == 48 || rounds == 26) rounds = 12;	//if key is either 48 hex digits or 26 characters rounds == 12
+	else if (rounds == 64 || rounds == 34) rounds = 14;	//if key is either 64 hex digits or 34 characters rounds == 14
 	generateKeys(keyString, rounds);					//parses through inputted string and generates all round keys
 
 	//lowercase the inputted mode
@@ -1328,6 +1325,8 @@ int main(int argc, char * argv[])
 				}
 			}
 		}
+		inputText.close();
+		outputText.close();
 	}
 	catch (exception e)	//Houston, we have a problem
 	{
