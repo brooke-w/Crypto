@@ -110,7 +110,7 @@ const unsigned char gfMult9[256] = { 0x00, 0x09, 0x12, 0x1B, 0x24, 0x2D, 0x36, 0
 const int maxRounds = 14;						//highest possible number of rounds
 const int maxWordsKey = 8;						//maximum words for the key
 //holds all of the round constants for generating each key
-const unsigned int roundConstants[maxRounds+1] = {0, 0x01 << 24, 0x02 << 24, 0x04 << 24, 0x08 << 24, 0x10 << 24, 0x20 << 24, 0x40 << 24, 0x80 << 24, 0x1B << 24, 0x36 << 24};
+const unsigned int roundConstants[maxRounds+1] = {0, 0x01 << 24, 0x02 << 24, 0x04 << 24, 0x08 << 24, 0x10 << 24, 0x20 << 24, 0x40 << 24, 0x80 << 24, 0x1B << 24, 0x36 << 24, 0x6C << 24, 0xD8 << 24, 0xAB << 24, 0x4D << 24};
 unsigned char key[maxRounds+1][4][4] = { 0 };			//holds all the keys for each round
 int rounds = 10;								//holds the amount of rounds we'll be processing the message for
 
@@ -286,7 +286,7 @@ void fourteenRoundKeys(unsigned int keyWords[]) {
 		words[index + 2] = words[index + 1] ^ words[index - 6];
 		words[index + 3] = words[index + 2] ^ words[index - 5];
 		words[index + 4] = words[index + 3] ^ words[index - 4];
-		temp = subWord(words[index + 3]);
+		temp = subWord(words[index + 4]);
 		words[index + 5] = temp ^ words[index - 3];
 		words[index + 6] = words[index + 5] ^ words[index - 2];
 		words[index + 7] = words[index + 6] ^ words[index - 1];

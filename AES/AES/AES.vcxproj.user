@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerCommandArguments>-d 'Pa$$w0rdPa$$w0rdPa$$w0rdPa$$w0rd' ecb  Shakespeare-ecb-14-encrypted.txt Shakespeare-ecb-14-decrypted.txt</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-d 'Pa$$w0rdPa$$w0rdPa$$w0rdPa$$w0rd' ecb  "C:\Users\Brooke Weborg\Documents\GitHub\crypto\AES\x64\Release\Shakespeare-ecb-14-encrypted.txt" Shakespeare-ecb-14-decrypted.txt</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>
-    </LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>AES -d 'Pa$$w0rdPa$$w0rdPa$$w0rd' ecb  "C:\Users\Brooke Weborg\Downloads\The Kool Kid\ECB-12-ENC.txt" Shakespeare-ecb-12-decrypted.txt</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

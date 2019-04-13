@@ -1,0 +1,6 @@
+﻿  pch.cpp
+  BIC.cpp
+c:\users\brooke weborg\documents\github\crypto\big integer class\big integer class\bic.cpp(17): error C2561: 'main': function must return a value
+  c:\users\brooke weborg\documents\github\crypto\big integer class\big integer class\bic.cpp(15): note: see declaration of 'main'
+  BigIntegerClass.cpp
+  Generating Code...
