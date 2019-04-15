@@ -1,6 +1,8 @@
-﻿  pch.cpp
-  BIC.cpp
-c:\users\brooke weborg\documents\github\crypto\big integer class\big integer class\bic.cpp(17): error C2561: 'main': function must return a value
-  c:\users\brooke weborg\documents\github\crypto\big integer class\big integer class\bic.cpp(15): note: see declaration of 'main'
-  BigIntegerClass.cpp
-  Generating Code...
+﻿  BigInt.cpp
+f:\github\crypto\big integer class\big integer class\bigint.cpp(108): warning C4018: '<': signed/unsigned mismatch
+f:\github\crypto\big integer class\big integer class\bigint.cpp(125): warning C4018: '<': signed/unsigned mismatch
+f:\github\crypto\big integer class\big integer class\bigint.cpp(142): warning C4018: '<': signed/unsigned mismatch
+f:\github\crypto\big integer class\big integer class\bigint.cpp(159): warning C4018: '<': signed/unsigned mismatch
+f:\github\crypto\big integer class\big integer class\bigint.cpp(175): warning C4018: '<': signed/unsigned mismatch
+f:\github\crypto\big integer class\big integer class\bigint.cpp(190): warning C4018: '<': signed/unsigned mismatch
+  Big Integer Class.vcxproj -> F:\GitHub\crypto\Big Integer Class\Debug\BIC.exe

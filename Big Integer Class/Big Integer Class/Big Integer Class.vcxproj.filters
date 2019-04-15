@@ -18,9 +18,6 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BigIntegerClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BigInt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
