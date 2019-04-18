@@ -1,8 +1,1 @@
-﻿  BigInt.cpp
-f:\github\crypto\big integer class\big integer class\bigint.cpp(108): warning C4018: '<': signed/unsigned mismatch
-f:\github\crypto\big integer class\big integer class\bigint.cpp(125): warning C4018: '<': signed/unsigned mismatch
-f:\github\crypto\big integer class\big integer class\bigint.cpp(142): warning C4018: '<': signed/unsigned mismatch
-f:\github\crypto\big integer class\big integer class\bigint.cpp(159): warning C4018: '<': signed/unsigned mismatch
-f:\github\crypto\big integer class\big integer class\bigint.cpp(175): warning C4018: '<': signed/unsigned mismatch
-f:\github\crypto\big integer class\big integer class\bigint.cpp(190): warning C4018: '<': signed/unsigned mismatch
-  Big Integer Class.vcxproj -> F:\GitHub\crypto\Big Integer Class\Debug\BIC.exe
+﻿  Big Integer Class.vcxproj -> F:\GitHub\crypto\Big Integer Class\Debug\BIC.exe
